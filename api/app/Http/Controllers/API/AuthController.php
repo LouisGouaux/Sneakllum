@@ -18,7 +18,7 @@ class AuthController extends Controller
             'email' => ['required', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed']
         ]);
-        $data['password'] = Hash::make($data['password'])
+        $data['password'] = Hash::make($data['password']);
         $user = User::create($data);
         $token = $user->CreateToken('auth_token')->plainTextToken;
         return response()->json([

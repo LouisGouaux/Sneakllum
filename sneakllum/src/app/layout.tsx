@@ -9,14 +9,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
       <html lang="fr">
       <body className="flex flex-col min-h-screen">
-        {/* Ajout de la barre de navigation ici */}
         <NavBar />
 
-        {/* Le contenu principal de la page */}
-        <main className="flex-1">{children}</main>
+        <main className="flex-1 flex items-center justify-center">{children}</main>
 
-        {/* Footer */}
-        <footer className="bg-gray-800 text-white text-center p-4 mt-auto">
+        <footer className="bg-gray-800 text-white text-center p-4 mt-10">
           © 2024 My E-commerce App
         </footer>
       </body>

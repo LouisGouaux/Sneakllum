@@ -18,17 +18,17 @@ export default function ProductPage() {
         colorway: "White/Black",
         estimatedMarketValue: 150,
         gender: "Unisex",
-        image: "https://image.goat.com/attachments/product_template_pictures/images/095/297/756/original/1203A430_001.png.png",
+            image: "https://image.goat.com/attachments/product_template_pictures/images/095/297/756/original/1203A430_001.png.png",
         name: "Nike Air Force 1",
     };
 
     return (
         <div className='flex w-screen h-screen flex-row'>
-            <div className='flex h-screen justify-center items-center w-2/4'>
+            <div className='flex h-screen justify-end items-start w-2/4'>
                 <img
                     src={product.image}
                     alt={product.name}
-                    className="flex h-fit justify-center items-center  object-cover"
+                    className="flex h-fit justify-center w-8/12 items-center object-cover"
                 />
             </div>
             <div className="flex flex-col justify-start mt-11 ml-11">
@@ -42,7 +42,7 @@ export default function ProductPage() {
                 </div>
 
 
-                <div className="mt-6 flex  flex-col justify-between	">
+                <div className="mt-6 flex  flex-col justify-between	h-24">
                     <Button label="Buy Now" variant="primary" className='mt-6'/>
                     <Button label="Add to Cart" variant="secondary" className='mt-6'/>
                 </div>

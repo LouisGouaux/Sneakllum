@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { HiShoppingCart, HiUser } from "react-icons/hi";
+import { AiOutlineUser, AiOutlineShoppingCart } from "react-icons/ai";
 
 export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -72,17 +72,17 @@ export default function NavBar() {
         <div className="flex items-center space-x-4">
           <input
             type="text"
-            placeholder="Rechercher des produits"
-            className="p-2 border rounded-md mr-4"
+            placeholder="Rechercher des produits..."
+            className="px-4 py-2 border rounded-full mr-4"
           />
         </div>
 
         <div className="flex space-x-6">
           <Link href="/cart" className="hover:text-black transition-all">
-            <HiShoppingCart className="text-2xl" />
+                <AiOutlineShoppingCart className="text-2xl" />
           </Link>
           <Link href="/profile" className="hover:text-black transition-all">
-            <HiUser className="text-2xl" />
+                <AiOutlineUser className="text-2xl" />
           </Link>
         </div>
       </nav>

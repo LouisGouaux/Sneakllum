@@ -1,3 +1,4 @@
+import test from "node:test";
 import type { Config } from "tailwindcss";
 
 export default {
@@ -11,6 +12,10 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        testred: "#478506"
+      },
+      fontsize: {
+        test: ""
       },
     },
   },

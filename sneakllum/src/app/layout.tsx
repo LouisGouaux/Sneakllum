@@ -1,3 +1,4 @@
+import "./globals.css";
 export const metadata = {
   title: "My E-commerce App",
   description: "An example e-commerce application built with Next.js",
@@ -8,7 +9,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <html lang="en">
           <body>
               <header>
-                <h1>My E-commerce App</h1>
+                <h1 className="bg-testred">My E-commerce App</h1>
                 {/* Add navigation links here */}
               </header>
               <main>{children}</main>

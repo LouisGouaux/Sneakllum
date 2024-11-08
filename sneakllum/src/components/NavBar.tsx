@@ -8,7 +8,7 @@ export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="bg-white text-black shadow p-4 mb-10">
+    <header className="bg-white text-black shadow p-4">
       <nav className="container mx-auto flex justify-between items-center">
         
         <Link href="/" className="flex items-center space-x-2">

@@ -11,9 +11,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="flex flex-col min-h-screen">
         <NavBar />
 
-        <main className="flex-1 flex items-center justify-center">{children}</main>
+        <main className="flex-1">{children}</main>
 
-        <footer className="bg-gray-800 text-white text-center p-4 mt-10">
+        <footer className="bg-gray-800 text-white text-center p-4">
           © 2024 My E-commerce App
         </footer>
       </body>

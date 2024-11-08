@@ -12,7 +12,7 @@ export default function NavBar() {
       <nav className="container mx-auto flex justify-between items-center">
         
         <Link href="/" className="flex items-center space-x-2">
-          <h1 className="text-xl font-bold">My E-commerce App</h1>
+          <h1 className="text-xl font-bold">Sneakllum</h1>
         </Link>
         
         <button
@@ -29,7 +29,7 @@ export default function NavBar() {
         >
           <li>
             <Link
-              href="/new"
+              href="/search/new"
               className="font-medium border-b-2 border-transparent hover:border-black hover:font-semibold hover:pb-1 transition-all"
             >
               Nouveau en ce moment
@@ -37,7 +37,7 @@ export default function NavBar() {
           </li>
           <li>
             <Link
-              href="/man"
+              href="/search/man"
               className="font-medium border-b-2 border-transparent hover:border-black hover:font-semibold hover:pb-1 transition-all"
             >
               Homme
@@ -45,7 +45,7 @@ export default function NavBar() {
           </li> 
           <li>
             <Link
-              href="/woman"
+              href="/search/woman"
               className="font-medium border-b-2 border-transparent hover:border-black hover:font-semibold hover:pb-1 transition-all"
             >
               Femme
@@ -53,7 +53,7 @@ export default function NavBar() {
           </li>
           <li>
             <Link
-              href="/child"
+              href="/search/child"
               className="font-medium border-b-2 border-transparent hover:border-black hover:font-semibold hover:pb-1 transition-all"
             >
               Enfant
@@ -61,7 +61,7 @@ export default function NavBar() {
           </li>
           <li>
             <Link
-              href="/offers"
+              href="/search/offers"
               className="font-medium border-b-2 border-transparent hover:border-black hover:font-semibold hover:pb-1 transition-all"
             >
               Offres

@@ -25,6 +25,6 @@ class AuthController extends Controller
                 'token' => $token
             ],
             'message' => 'User created successfully'
-        ]);
+        ], 201);
     }
 }

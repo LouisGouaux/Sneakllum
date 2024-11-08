@@ -11,6 +11,9 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        primary: "rgb(234 179 8)",
+        primaryhover: "rgb(251 146 60)",
+        secondary: "rgb(0 0 0)",
       },
       fontsize: {
         test: ""

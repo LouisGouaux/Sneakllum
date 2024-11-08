@@ -11,7 +11,7 @@ class add_product extends Controller
 {
     public function store_sneaker()
     {
-        $response = Http::get("http://54.37.12.181:1337/api/sneakers?pagination%5BwithCount%5D=true");
+        $response = Http::timeout(60)->get("http://54.37.12.181:1337/api/sneakers?pagination%5BwithCount%5D=true");
         if ($response->successful()) {
             $sneakers = $response->json("data");
             foreach ($sneakers as $sneaker) {

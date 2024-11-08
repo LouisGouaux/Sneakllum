@@ -41,6 +41,7 @@ export default function RegisterPage() {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    "Accept": "application/json",
                 },
                 body: JSON.stringify({
                     first_name: formData.firstName,

@@ -23,7 +23,10 @@ export default function RegisterPage() {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
-
+        if (formData.password == ""){
+            setError("Password is mandatory");
+            return;
+        }
         // Basic validation for password match
         if (formData.password !== formData.confirmPassword) {
             setError("Passwords do not match");

@@ -51,5 +51,10 @@ class AuthController extends Controller
                 'message' => 'User logged in successfully'
             ], 200);
         }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Invalid credentials'
+        ], 422);
     }
 }

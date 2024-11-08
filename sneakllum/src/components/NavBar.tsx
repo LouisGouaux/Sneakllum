@@ -1,48 +1,87 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link"; 
+import Link from "next/link";
 
 export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="bg-blue-500 text-white p-4">
+    <header className="bg-sky-50 text-black p-4">
       <nav className="container mx-auto flex justify-between items-center">
-        {/* Logo */}
-        <h1 className="text-xl font-bold">My E-commerce App</h1>
         
-        {/* Hamburger Icon for small screens */}
+        <Link href="/" className="flex items-center space-x-2">
+          <h1 className="text-xl font-bold">My E-commerce App</h1>
+        </Link>
+        
         <button
-          className="lg:hidden"
+          className="lg:hidden block text-2xl"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
-          <span className="text-2xl">☰</span>
+          <span>☰</span>
         </button>
 
-        {/* Desktop Links */}
-        <ul className={`lg:flex space-x-6 ${isMenuOpen ? 'flex' : 'hidden'} lg:flex`}>
+        <ul
+          className={`lg:flex space-x-6 flex-1 justify-center ${
+            isMenuOpen ? 'flex' : 'hidden'
+          }`}
+        >
           <li>
-            <Link href="/" className="hover:text-yellow-300 transition-colors">
-              Home
+            <Link
+              href="/new"
+              className="font-medium border-b-2 border-transparent hover:border-black hover:font-semibold hover:pb-1 transition-all"
+            >
+              Nouveau en ce moment
             </Link>
           </li>
           <li>
-            <Link href="/shop" className="hover:text-yellow-300 transition-colors">
-              Shop
+            <Link
+              href="/man"
+              className="font-medium border-b-2 border-transparent hover:border-black hover:font-semibold hover:pb-1 transition-all"
+            >
+              Homme
+            </Link>
+          </li> 
+          <li>
+            <Link
+              href="/woman"
+              className="font-medium border-b-2 border-transparent hover:border-black hover:font-semibold hover:pb-1 transition-all"
+            >
+              Femme
             </Link>
           </li>
           <li>
-            <Link href="/about" className="hover:text-yellow-300 transition-colors">
-              About Us
+            <Link
+              href="/child"
+              className="font-medium border-b-2 border-transparent hover:border-black hover:font-semibold hover:pb-1 transition-all"
+            >
+              Enfant
             </Link>
           </li>
           <li>
-            <Link href="/contact" className="hover:text-yellow-300 transition-colors">
-              Contact
+            <Link
+              href="/offers"
+              className="font-medium border-b-2 border-transparent hover:border-black hover:font-semibold hover:pb-1 transition-all"
+            >
+              Offres
             </Link>
           </li>
         </ul>
+
+        <div className="flex space-x-6">
+          <Link
+            href="/cart"
+            className="font-medium border-b-2 border-transparent hover:border-black hover:font-semibold hover:pb-1 transition-all"
+          >
+            Panier
+          </Link>
+          <Link
+            href="/profile"
+            className="font-medium border-b-2 border-transparent hover:border-black hover:font-semibold hover:pb-1 transition-all"
+          >
+            Profil
+          </Link>
+        </div>
       </nav>
     </header>
   );

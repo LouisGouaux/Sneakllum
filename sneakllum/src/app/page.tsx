@@ -5,7 +5,7 @@ export default function HomePage() {
   return (
     <div>
       {/* Section principale avec une grande image et un message d'accueil */}
-      <section className="relative h-screen bg-cover bg-center w-full" style={{ backgroundImage: "url('/images/hero-sneakers.jpg')" }}>
+      <section className="relative h-screen bg-cover bg-center w-full" style={{ backgroundImage: "url('https://images.pexels.com/photos/14595091/pexels-photo-14595091.jpeg')" }}>
         <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center text-center text-white px-4">
           <h1 className="text-4xl md:text-6xl font-bold">Découvrez les Sneakers qui Vous Ressemblent</h1>
           <p className="mt-4 text-lg md:text-2xl">Les dernières tendances en matière de sneakers pour homme, femme, et enfant.</p>

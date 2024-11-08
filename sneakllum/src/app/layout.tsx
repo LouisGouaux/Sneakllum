@@ -13,7 +13,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <NavBar />
 
         {/* Le contenu principal de la page */}
-        <main>{children}</main>
+        <main className='flex justify-center'>{children}</main>
 
         {/* Footer */}
         <footer className="bg-gray-800 text-white text-center p-4">

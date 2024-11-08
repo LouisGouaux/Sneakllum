@@ -38,7 +38,7 @@ export default function RegisterPage() {
     };
 
     return (
-        <div className="max-w-md w-full min-h-fit h-5/6 mb-36	mx-auto mt-10 p-8 border border-gray-200 rounded-lg shadow-lg">
+        <div className="max-w-md w-full min-h-fit h-5/6	mx-auto my-10 p-8 border border-gray-200 rounded-lg shadow-lg">
             <h2 className="text-2xl font-bold text-center mb-6 ">Register</h2>
             {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
             <form onSubmit={handleSubmit} className="space-y-4">

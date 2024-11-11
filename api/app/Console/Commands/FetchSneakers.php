@@ -2,7 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Product;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Http;
 
 class FetchSneakers extends Command
 {
@@ -25,6 +28,49 @@ class FetchSneakers extends Command
      */
     public function handle()
     {
-        //
+        $current_page = 1;
+        $has_more_pages = true;
+
+        while ($has_more_pages) {
+            $response = Http::timeout(60)->get("http://54.37.12.181:1337/api/sneakers", [
+                'pagination[page]' => $current_page,
+                'pagination[pageSize]' => 25, // Adjust the page size as needed
+            ]);
+
+            if ($response->successful()) {
+                $sneakers = $response->json("data");
+                $pagination = $response->json('meta.pagination');
+
+                foreach ($sneakers as $sneaker) {
+                    $this->store_or_update_sneaker($sneaker['attributes']);
+                }
+
+                $current_page++;
+                $has_more_pages = $pagination['page'] < $pagination['pageCount'];
+            } else {
+                $hasMorePages = false;
+            }
+        }
     }
+
+    private function store_or_update_sneaker(array $attributes)
+    {
+        Product::updateOrCreate(
+            ['sku' => $attributes['sku']],
+            [
+                'brand' => $attributes['brand'],
+                'name' => $attributes['name'],
+                'color' => $attributes['colorway'],
+                'market_price' => $attributes['estimatedMarketValue'],
+                'gender' => $attributes['gender'],
+                'image' => $attributes['image']['original'],
+                'release_date' => Carbon::parse($attributes['releaseDate'])->format('y-m-d'),
+                'release_year' => (int)$attributes['releaseYear'],
+                'story' => $attributes['story'],
+                'price' => (int)$attributes['retailPrice']
+            ]
+        );
+    }
+
+
 }

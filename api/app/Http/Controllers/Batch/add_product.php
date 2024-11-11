@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Batch;
 
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\Product;
@@ -52,7 +53,7 @@ class add_product extends Controller
                 'market_price' => $attributes['estimatedMarketValue'],
                 'gender' => $attributes['gender'],
                 'image' => $attributes['image']['original'],
-                'release_date' => $attributes['releaseDate'],
+                'release_date' => Carbon::parse($attributes['releaseDate'])->format('y-m-d'),
                 'release_year' => (int)$attributes['releaseYear'],
                 'story' => $attributes['story'],
                 'price' => (int)$attributes['retailPrice']

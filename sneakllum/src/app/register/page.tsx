@@ -3,8 +3,11 @@
 import React, { useState } from "react";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
+import {useRouter} from "next/navigation";
 
 export default function RegisterPage() {
+    const router = useRouter();
+
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
@@ -151,7 +154,10 @@ export default function RegisterPage() {
                     </div>
                     <Button label="Register" variant="primary" />
                 </form>
-                <Button label="Sign Up" variant="secondary" />
+                <Button label="Sign in"
+                        variant="secondary"
+                        onClick={() => router.push("/login")}
+                />
             </div>
         );
     }

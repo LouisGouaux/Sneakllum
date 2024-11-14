@@ -34,7 +34,7 @@ class FetchSneakers extends Command
         while ($has_more_pages) {
             $response = Http::timeout(60)->get("http://54.37.12.181:1337/api/sneakers", [
                 'pagination[page]' => $current_page,
-                'pagination[pageSize]' => 25, // Adjust the page size as needed
+                'pagination[pageSize]' => 25,
             ]);
 
             if ($response->successful()) {
@@ -48,29 +48,32 @@ class FetchSneakers extends Command
                 $current_page++;
                 $has_more_pages = $pagination['page'] < $pagination['pageCount'];
             } else {
-                $hasMorePages = false;
+                $has_more_pages = false;
             }
         }
+        $this->info('Products imported');
     }
 
     private function store_or_update_sneaker(array $attributes)
     {
-        Product::updateOrCreate(
-            ['sku' => $attributes['sku']],
-            [
-                'brand' => $attributes['brand'],
-                'name' => $attributes['name'],
-                'color' => $attributes['colorway'],
-                'market_price' => $attributes['estimatedMarketValue'],
-                'gender' => $attributes['gender'],
-                'image' => $attributes['image']['original'],
-                'release_date' => Carbon::parse($attributes['releaseDate'])->format('y-m-d'),
-                'release_year' => (int)$attributes['releaseYear'],
-                'story' => $attributes['story'],
-                'price' => (int)$attributes['retailPrice']
-            ]
-        );
+        if (!Product::where('name', $attributes['name'])->exists()) {
+            Product::updateOrCreate(
+                ['sku' => $attributes['sku']],
+                [
+                    'brand' => $attributes['brand'],
+                    'name' => $attributes['name'],
+                    'color' => $attributes['colorway'],
+                    'market_price' => (int)$attributes['estimatedMarketValue'] * 100,
+                    'gender' => $attributes['gender'],
+                    'image' => $attributes['image']['original'],
+                    'release_date' => Carbon::parse($attributes['releaseDate'])->format('Y-m-d'),
+                    'release_year' => (int)$attributes['releaseYear'],
+                    'story' => $attributes['story'],
+                    'price' => (int)$attributes['retailPrice']
+                ]
+            );
+        }
     }
-
-
 }
+
+

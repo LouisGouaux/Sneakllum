@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -15,16 +14,16 @@ return new class extends Migration
             $table->id();
             $table->string("sku")->unique();
             $table->string("brand");
-            $table->string("name");
+            $table->string("name")->unique();
             $table->string("color");
-            $table->float('market_price');
             $table->string("gender");
-            $table->string("image");
             $table->date("release_date");
             $table->integer("release_year");
+            $table->string("image");
+
             $table->text("story");
+            $table->integer('market_price');
             $table->integer("price");
-            $table->integer("stock")->default(42);
             $table->timestamps();
         });
     }

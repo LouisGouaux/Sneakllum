@@ -84,7 +84,7 @@ export default function NavBar() {
           <Link href="/cart" className="hover:text-black transition-all">
                 <AiOutlineShoppingCart className="text-2xl" />
           </Link>
-          <Link href="/profile" className="hover:text-black transition-all">
+          <Link href="/login" className="hover:text-black transition-all">
                 <AiOutlineUser className="text-2xl" />
           </Link>
         </div>

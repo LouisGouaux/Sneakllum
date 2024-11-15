@@ -41,7 +41,7 @@ export default function RegisterPage() {
         }
         setIsLoading(true)
         try {
-            const response = await fetch("http://sneakllum.louis.gouaux.com/api/register", {
+            const response = await fetch("https://5b8cmbmlsw.preview.infomaniak.website/api/register", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

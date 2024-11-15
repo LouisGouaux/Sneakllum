@@ -14,6 +14,7 @@ export default {
         primary: "rgb(234 179 8)",
         primaryhover: "rgb(251 146 60)",
         secondary: "rgb(0 0 0)",
+        secondaryhover: "rgb(247 247 247)",
       },
       fontsize: {
         test: ""

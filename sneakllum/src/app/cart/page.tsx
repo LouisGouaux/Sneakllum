@@ -73,6 +73,7 @@ export default function CartPage() {
                                 <Input
                                     type="number"
                                     className="w-16 text-center border border-gray-300 rounded-lg"
+                                    variant="secondary"
                                     value={item.quantity.toString()}
                                     onChange={(e) =>
                                         updateQuantity(item.id, parseInt(e.target.value, 10))

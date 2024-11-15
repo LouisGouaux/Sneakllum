@@ -58,7 +58,7 @@ class FetchSneakers extends Command
     private function store_or_update_sneaker(array $attributes)
     {
         if (!Product::where('name', $attributes['name'])->exists()) {
-            Product::updateOrCreate(
+            $product = Product::updateOrCreate(
                 ['sku' => $attributes['sku']],
                 [
                     'brand' => $attributes['brand'],
@@ -72,6 +72,25 @@ class FetchSneakers extends Command
                     'price' => (int)$attributes['retailPrice']
                 ]
             );
+            $this->link_size($product);
+        }
+    }
+
+    private function link_size($product)
+    {
+        $gender_size = [
+            'men' => range(39, 47),
+            'women' => range(35, 42),
+            'youth' => range(30, 39),
+            'child' => range('22', 31),
+            'unisex' => range(36, 44),
+            'infant' => range(16, 21)
+        ];
+
+        foreach ($gender_size[$product->gender] as $size) {
+            $variants = $product->variants;
+            $variants->sizes->attach($size);
+            $variants->save();
         }
     }
 }

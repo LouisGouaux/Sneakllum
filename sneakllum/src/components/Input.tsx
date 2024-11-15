@@ -1,4 +1,3 @@
-// components/Input.tsx
 import React from "react";
 
 interface InputProps {
@@ -7,10 +6,25 @@ interface InputProps {
     placeholder?: string;
     value?: string;
     className?: string;
+    variant?: "primary" | "secondary";
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export default function Input({ type = "text", name, placeholder, value, onChange, className }: InputProps) {
+export default function Input({
+    type = "text",
+    name,
+    placeholder,
+    value,
+    className,
+    variant = "primary",
+    onChange,
+}: InputProps) {
+    const variantClasses =
+    variant === "primary"
+        ? "border-primary focus:border-primary focus:ring-1 focus:ring-primary hover:bg-primaryhover"
+        : "border-secondary focus:border-secondary focus:ring-1 focus:ring-secondary hover:bg-secondaryhover";
+
+
     return (
         <input
             type={type}
@@ -18,7 +32,7 @@ export default function Input({ type = "text", name, placeholder, value, onChang
             placeholder={placeholder}
             value={value}
             onChange={onChange}
-            className={`w-full border border-gray-300 rounded px-4 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 ${className}`}
+            className={`w-full border rounded px-4 py-2 focus:outline-none ${variantClasses} ${className}`}
         />
     );
 }

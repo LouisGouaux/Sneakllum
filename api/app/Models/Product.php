@@ -24,6 +24,6 @@ class Product extends Model
 
     public function variants()
     {
-        return $this->belongsToMany(Variant::class);
+        return $this->hasMany(Variant::class);
     }
 }

@@ -120,7 +120,11 @@ export default function LoginPage() {
                                 variant="secondary"
                             />
                         </div>
-                        <Button label="Login" variant="primary" className="w-full"/>
+                        <Button
+                            label="Login"
+                            variant="primary"
+                            className="w-full"
+                        />
                     </form>
                     <Button
                         label="Sign Up"

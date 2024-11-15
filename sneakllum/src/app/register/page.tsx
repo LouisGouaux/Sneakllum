@@ -163,7 +163,11 @@ export default function RegisterPage() {
                             variant="secondary"
                         />
                     </div>
-                    <Button label="Register" variant="primary" className="w-full"/>
+                    <Button
+                        label="Register"
+                        variant="primary"
+                        className="w-full"
+                    />
                 </form>
                 <Button label="Sign in"
                         variant="secondary"

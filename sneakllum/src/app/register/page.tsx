@@ -74,6 +74,7 @@ export default function RegisterPage() {
         } catch (err) {
             setIsLoading(false)
             setError("An error occurred. Please try again later.");
+            console.log(err)
         }
     };
     if(isLoading){

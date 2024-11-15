@@ -4,6 +4,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     label?: string;
     onClick?: () => void;
     icon?: React.ReactNode;
+    iconPosition?: "left" | "right";
     variant?: "primary" | "secondary" | "alert";
 }
 
@@ -11,6 +12,7 @@ export default function Button({
     label,
     onClick,
     icon,
+    iconPosition = "left",
     variant = "primary",
     className = "",
 }: ButtonProps) {
@@ -24,10 +26,11 @@ export default function Button({
     return (
         <button
             onClick={onClick}
-            className={`py-2 px-4 rounded-lg font-semibold text-center focus:outline-none ${variantClasses} ${classes} ${className}`}
+            className={`flex items-center justify-center gap-2 py-2 px-4 rounded-lg font-semibold text-center focus:outline-none ${variantClasses} ${classes} ${className}`}
         >
-            {icon && <span className="text-lg">{icon}</span>}
+            {icon && iconPosition === "left" && <span className="text-lg">{icon}</span>}
             {label}
+            {icon && iconPosition === "right" && <span className="text-lg">{icon}</span>}
         </button>
     );
 }

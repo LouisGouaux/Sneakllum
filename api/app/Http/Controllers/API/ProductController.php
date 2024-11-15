@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -30,10 +31,7 @@ class ProductController extends Controller
     public function show($id)
     {
         $product = Product::find($id);
-        return response()->json([
-            'success' => true,
-            'data' => $product
-        ]);
+        return response()->json(new ProductResource($product));
     }
 
     /**

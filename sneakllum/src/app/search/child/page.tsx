@@ -1,8 +1,9 @@
+import SearchPage from "@/app/catalog/page";
+
 export default function ChildPage() {
     return (
         <div>
-            <h2>Enfant</h2>
-            <p>Découvrez les produits pour enfant</p>
+            <SearchPage title="for Child"/>
         </div>
     );
 }

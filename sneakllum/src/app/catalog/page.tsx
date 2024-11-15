@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import Button from "../../components/Button";
 
 interface Product {
     id: number;
@@ -108,9 +109,11 @@ export default function SearchPage() {
                             <p className="text-sm text-gray-500">Color: {product.color}</p>
                             <p className="text-sm text-gray-500">Size: {product.size}</p>
                             <p className="text-sm text-gray-500">Sex: {product.sex}</p>
-                            <button className="mt-4 w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
-                                Add to Cart
-                            </button>
+                            <Button
+                                label="Add to Cart"
+                                className="mt-4"
+                                variant="primary"
+                            />
                         </div>
                     ))}
                 </div>

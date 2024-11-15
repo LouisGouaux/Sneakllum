@@ -104,6 +104,8 @@ export default function LoginPage() {
                                 placeholder="Email"
                                 value={formData.email}
                                 onChange={handleChange}
+                                className="w-full"
+                                variant="secondary"
                             />
                         </div>
                         <div>
@@ -114,14 +116,17 @@ export default function LoginPage() {
                                 placeholder="Password"
                                 value={formData.password}
                                 onChange={handleChange}
+                                className="w-full"
+                                variant="secondary"
                             />
                         </div>
-                        <Button label="Login" variant="primary"/>
+                        <Button label="Login" variant="primary" className="w-full"/>
                     </form>
                     <Button
                         label="Sign Up"
                         variant="secondary"
                         onClick={() => router.push("/register")}
+                        className="w-full"
                     />
                 </div>
             </div>

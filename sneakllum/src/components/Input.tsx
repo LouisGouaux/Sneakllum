@@ -6,7 +6,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     placeholder?: string;
     value?: string;
     className?: string;
-    variant?: "primary" | "secondary";
+    variant?: "primary" | "secondary" | "alert";
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -19,10 +19,13 @@ export default function Input({
     variant = "primary",
     onChange,
 }: InputProps) {
-    const variantClasses =
-    variant === "primary"
-        ? "border-primary focus:border-primary focus:ring-1 focus:ring-primary hover:bg-primaryhover"
-        : "border-secondary focus:border-secondary focus:ring-1 focus:ring-secondary hover:bg-secondaryhover";
+    const variantClasses = {
+    primary: "bg-primary hover:bg-primaryhover",
+    secondary: "border-secondary focus:border-secondary focus:ring-1 focus:ring-secondary hover:bg-secondaryhover",
+    alert: "bg-alert text-white",
+};
+
+    const classes = variantClasses[variant] || variantClasses.primary;
 
 
     return (
@@ -32,7 +35,7 @@ export default function Input({
             placeholder={placeholder}
             value={value}
             onChange={onChange}
-            className={`w-full border rounded px-4 py-2 focus:outline-none ${variantClasses} ${className}`}
+            className={`py-2 px-4 border rounded-lg focus:outline-none ${variantClasses} ${classes} ${className}`}
         />
     );
 }

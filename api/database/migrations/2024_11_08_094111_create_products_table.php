@@ -15,12 +15,10 @@ return new class extends Migration {
             $table->string("sku")->unique();
             $table->string("brand");
             $table->string("name")->unique();
-            $table->string("color");
             $table->string("gender");
             $table->date("release_date");
             $table->integer("release_year");
             $table->string("image");
-
             $table->text("story");
             $table->integer('market_price');
             $table->integer("price");

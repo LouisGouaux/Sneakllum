@@ -64,7 +64,6 @@ class FetchSneakers extends Command
                 [
                     'brand' => $attributes['brand'],
                     'name' => $attributes['name'],
-                    'color' => $attributes['colorway'],
                     'market_price' => (int)$attributes['estimatedMarketValue'] * 100,
                     'gender' => $attributes['gender'],
                     'image' => $attributes['image']['original'],

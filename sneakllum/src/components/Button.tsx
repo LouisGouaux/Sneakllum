@@ -1,7 +1,7 @@
 // components/Button.tsx
 import React from "react";
 
-interface ButtonProps {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     label: string;
     onClick?: () => void;
     variant?: "primary" | "secondary";

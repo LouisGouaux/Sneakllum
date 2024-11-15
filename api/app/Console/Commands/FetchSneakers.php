@@ -30,6 +30,7 @@ class FetchSneakers extends Command
     {
         $current_page = 1;
         $has_more_pages = true;
+        $this->info("Script started");
 
         while ($has_more_pages) {
             $response = Http::timeout(120)->get("http://54.37.12.181:1337/api/sneakers", [

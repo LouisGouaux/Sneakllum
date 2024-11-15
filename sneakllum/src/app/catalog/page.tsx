@@ -11,6 +11,9 @@ interface Product {
     size: string;
     sex: string;
 }
+interface Search {
+    title: string;
+}
 
 const dummyProducts: Product[] = [
     { id: 1, name: "Nike Air Max", image: "https://via.placeholder.com/150", price: 120, color: "red", size: "M", sex: "male" },
@@ -19,7 +22,7 @@ const dummyProducts: Product[] = [
     { id: 4, name: "Reebok Nano", image: "https://via.placeholder.com/150", price: 130, color: "white", size: "M", sex: "female" },
 ];
 
-export default function SearchPage({title}) {
+export default function SearchPage({title}: Search) {
     const [filters, setFilters] = useState({
         color: "",
         size: "",

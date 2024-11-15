@@ -37,7 +37,6 @@ class FetchSneakers extends Command
                 'pagination[page]' => $current_page,
                 'pagination[pageSize]' => 10,
             ]);
-            $this->info('Fetching to API');
 
             if ($response->successful()) {
                 $sneakers = $response->json("data");

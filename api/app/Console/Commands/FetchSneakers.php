@@ -32,7 +32,7 @@ class FetchSneakers extends Command
         $has_more_pages = true;
 
         while ($has_more_pages) {
-            $response = Http::timeout(60)->get("http://54.37.12.181:1337/api/sneakers", [
+            $response = Http::timeout(90)->get("http://54.37.12.181:1337/api/sneakers", [
                 'pagination[page]' => $current_page,
                 'pagination[pageSize]' => 25,
             ]);

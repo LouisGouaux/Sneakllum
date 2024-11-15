@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
+import { IoTrashBin } from "react-icons/io5";
 
 interface CartItem {
     id: number;
@@ -87,7 +88,7 @@ export default function CartPage() {
                                 />
                             </div>
                             <Button
-                                label="Remove"
+                                icon={<IoTrashBin />}
                                 onClick={() => removeItem(item.id)}
                                 variant="alert"
                             />

@@ -1,14 +1,16 @@
 import React from "react";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    label: string;
+    label?: string;
     onClick?: () => void;
+    icon?: React.ReactNode;
     variant?: "primary" | "secondary" | "alert";
 }
 
 export default function Button({
     label,
     onClick,
+    icon,
     variant = "primary",
     className = "",
 }: ButtonProps) {
@@ -17,7 +19,6 @@ export default function Button({
     secondary: "border-secondary focus:border-secondary focus:ring-1 focus:ring-secondary hover:bg-secondaryhover",
     alert: "bg-alert hover:bg-alerthover text-white",
 };
-
     const classes = variantClasses[variant] || variantClasses.primary;
     
     return (
@@ -25,6 +26,7 @@ export default function Button({
             onClick={onClick}
             className={`py-2 px-4 rounded-lg font-semibold text-center focus:outline-none ${variantClasses} ${classes} ${className}`}
         >
+            {icon && <span className="text-lg">{icon}</span>}
             {label}
         </button>
     );

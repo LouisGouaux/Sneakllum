@@ -6,8 +6,8 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     placeholder?: string;
     value?: string;
     className?: string;
+    icon?: React.ReactNode;
     variant?: "primary" | "secondary" | "alert";
-    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export default function Input({
@@ -15,7 +15,8 @@ export default function Input({
     name,
     placeholder,
     value,
-    className="",
+    className = "",
+    icon,
     variant = "primary",
     onChange,
 }: InputProps) {
@@ -24,9 +25,7 @@ export default function Input({
     secondary: "border-secondary focus:border-secondary focus:ring-1 focus:ring-secondary hover:bg-secondaryhover",
     alert: "bg-alert text-white",
 };
-
     const classes = variantClasses[variant] || variantClasses.primary;
-
 
     return (
         <input
@@ -36,6 +35,8 @@ export default function Input({
             value={value}
             onChange={onChange}
             className={`py-2 px-4 border rounded-lg focus:outline-none ${variantClasses} ${classes} ${className}`}
-        />
+        >
+            {icon && <span className="text-lg">{icon}</span>}
+        </input>
     );
 }

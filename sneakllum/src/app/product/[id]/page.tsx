@@ -99,9 +99,6 @@ export default function ProductPage() {
                                 variant="primary"
                                 className="mt-4 w-full"
                             />
-                            {/*<button className="mt-4 w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">
-                                View Product
-                            </button>*/}
                         </div>
                     ))}
                 </div>

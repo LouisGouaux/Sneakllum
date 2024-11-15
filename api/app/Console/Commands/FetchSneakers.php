@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Models\Product;
+use App\Models\Size;
+use App\Models\Variant;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
@@ -57,6 +59,7 @@ class FetchSneakers extends Command
 
     private function store_or_update_sneaker(array $attributes)
     {
+        $gender = $this->clean_gender($attributes['gender']);
         if (!Product::where('name', $attributes['name'])->exists()) {
             $product = Product::updateOrCreate(
                 ['sku' => $attributes['sku']],
@@ -64,7 +67,7 @@ class FetchSneakers extends Command
                     'brand' => $attributes['brand'],
                     'name' => $attributes['name'],
                     'market_price' => (int)$attributes['estimatedMarketValue'] * 100,
-                    'gender' => $attributes['gender'],
+                    'gender' => $gender,
                     'image' => $attributes['image']['original'],
                     'release_date' => Carbon::parse($attributes['releaseDate'])->format('Y-m-d'),
                     'release_year' => (int)$attributes['releaseYear'],
@@ -76,21 +79,37 @@ class FetchSneakers extends Command
         }
     }
 
+    private function clean_gender($gender) {
+        if($gender == 'preschool') {
+            $gender = 'infant';
+        }
+        if($gender == 'toddler') {
+            $gender = 'infant';
+        }
+        else {
+            $gender = $gender;
+        }
+        return $gender;
+    }
+
     private function link_size($product)
     {
         $gender_size = [
             'men' => range(39, 47),
             'women' => range(35, 42),
             'youth' => range(30, 39),
-            'child' => range('22', 31),
+            'child' => range(22, 31),
             'unisex' => range(36, 44),
-            'infant' => range(16, 21)
+            'infant' => range(16, 21),
         ];
 
         foreach ($gender_size[$product->gender] as $size) {
-            $variants = $product->variants;
-            $variants->sizes->attach($size);
-            $variants->save();
+            $size_id = Size::where('size', $size)->first()->id;
+            $variant = new Variant();
+            $variant->product_id = $product->id;
+            $variant->size_id = $size_id;
+            $variant->save();
+
         }
     }
 }

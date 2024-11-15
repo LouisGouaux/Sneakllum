@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('variants', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('product_id');
+            $table->unsignedBigInteger('product_id')->nullable();
             $table->foreign('product_id')->references('id')->on('products');
-            $table->unsignedBigInteger('size_id');
+            $table->unsignedBigInteger('size_id')->nullable();
             $table->foreign('size_id')->references('id')->on('sizes');
-            $table->unsignedBigInteger('color_id');
+            $table->unsignedBigInteger('color_id')->nullable();
             $table->foreign('color_id')->references('id')->on('colors');
             $table->integer('stock')->default(12);
             $table->timestamps();

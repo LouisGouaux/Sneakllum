@@ -7,18 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Variant extends Model
 {
-    public function products()
+    public function product()
     {
-        return $this->belongsToMany(Product::class);
+        return $this->belongsTo(Product::class);
     }
 
-    public function sizes()
+    public function size()
     {
-        $this->belongsToMany(Size::class);
+        $this->belongsTo(Size::class);
     }
 
-    public function colors()
+    public function color()
     {
-        return $this->belongsToMany(Color::class);
+        return $this->belongsTo(Color::class);
     }
 }

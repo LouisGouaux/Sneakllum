@@ -70,13 +70,15 @@ export default function CartPage() {
                                 >
                                     -
                                 </button>
-                                <div className="w-16 text-center border border-gray-300 rounded-lg">
-                                    <Input
-                                        type="number"
-                                        value={item.quantity.toString()}
-                                        onChange={(e) => updateQuantity(item.id, parseInt(e.target.value, 10))}
-                                    />
-                                </div>
+                                <Input
+                                    type="number"
+                                    className="w-16 text-center border border-gray-300 rounded-lg"
+                                    variant="secondary"
+                                    value={item.quantity.toString()}
+                                    onChange={(e) =>
+                                        updateQuantity(item.id, parseInt(e.target.value, 10))
+                                    }
+                                />
                                 <button
                                     onClick={() => updateQuantity(item.id, item.quantity + 1)}
                                     className="px-2 py-1 border border-gray-300 rounded-lg hover:bg-gray-100"

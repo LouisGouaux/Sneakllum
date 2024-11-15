@@ -1,6 +1,6 @@
 import React from "react";
 
-interface InputProps {
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     type?: string;
     name?: string;
     placeholder?: string;
@@ -15,7 +15,7 @@ export default function Input({
     name,
     placeholder,
     value,
-    className,
+    className="",
     variant = "primary",
     onChange,
 }: InputProps) {

@@ -7,7 +7,6 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     value?: string;
     className?: string;
     icon?: React.ReactNode;
-    iconPosition?: "left" | "right";
     variant?: "primary" | "secondary" | "alert";
 }
 
@@ -18,7 +17,6 @@ export default function Input({
     value,
     className = "",
     icon,
-    iconPosition = "left",
     variant = "primary",
     onChange,
 }: InputProps) {

@@ -94,9 +94,11 @@ export default function ProductPage() {
                             />
                             <h3 className="text-lg font-bold">{item.name}</h3>
                             <p className="text-blue-600 font-semibold">${item.price}</p>
-                            <button className="mt-4 w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">
-                                View Product
-                            </button>
+                            <Button
+                                label="View Product"
+                                variant="primary"
+                                className="mt-4 w-full"
+                            />
                         </div>
                     ))}
                 </div>

@@ -111,6 +111,8 @@ export default function RegisterPage() {
                             placeholder="First Name"
                             value={formData.firstName}
                             onChange={handleChange}
+                            className="w-full"
+                            variant="secondary"
                         />
                     </div>
                     <div>
@@ -121,6 +123,8 @@ export default function RegisterPage() {
                             placeholder="Last Name"
                             value={formData.lastName}
                             onChange={handleChange}
+                            className="w-full"
+                            variant="secondary"
                         />
                     </div>
                     <div>
@@ -131,6 +135,8 @@ export default function RegisterPage() {
                             placeholder="Email"
                             value={formData.email}
                             onChange={handleChange}
+                            className="w-full"
+                            variant="secondary"
                         />
                     </div>
                     <div>
@@ -141,6 +147,8 @@ export default function RegisterPage() {
                             placeholder="Password"
                             value={formData.password}
                             onChange={handleChange}
+                            className="w-full"
+                            variant="secondary"
                         />
                     </div>
                     <div>
@@ -151,13 +159,20 @@ export default function RegisterPage() {
                             placeholder="Confirm Password"
                             value={formData.confirmPassword}
                             onChange={handleChange}
+                            className="w-full"
+                            variant="secondary"
                         />
                     </div>
-                    <Button label="Register" variant="primary" />
+                    <Button
+                        label="Register"
+                        variant="primary"
+                        className="w-full"
+                    />
                 </form>
                 <Button label="Sign in"
                         variant="secondary"
                         onClick={() => router.push("/login")}
+                        className="w-full"
                 />
             </div>
         );

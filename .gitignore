@@ -3,3 +3,4 @@ package-lock.json
 .idea
 /sneakllum/.idea
 sneakllum/.idea/workspace.xml
+.vercel

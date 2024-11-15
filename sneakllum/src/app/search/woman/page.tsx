@@ -1,8 +1,9 @@
+import SearchPage from "@/app/catalog/page";
+
 export default function WomanPage() {
     return (
         <div>
-            <h2>Femme</h2>
-            <p>Découvrez les produits pour femme</p>
+            <SearchPage title="for Woman"/>
         </div>
     );
 }

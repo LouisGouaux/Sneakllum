@@ -22,7 +22,8 @@ class ProductResource extends JsonResource
             'gender' => $this->gender,
             'image' => $this->image,
             'market_price' => $this->market_price,
-            'price' => $this->price
+            'price' => $this->price,
+            'sizes' => SizeResource::collection($this->sizes)
         ];
     }
 }

@@ -26,4 +26,9 @@ class Product extends Model
     {
         return $this->hasMany(Variant::class);
     }
+
+    public function sizes()
+    {
+        return $this->belongsToMany(Size::class, 'variants', 'product_id', 'size_id');
+    }
 }

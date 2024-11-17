@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Color;
 use App\Models\Product;
 use App\Models\Size;
 use App\Models\Variant;
@@ -60,6 +61,7 @@ class FetchSneakers extends Command
     private function store_or_update_sneaker(array $attributes)
     {
         $gender = $this->clean_gender($attributes['gender']);
+        $colors = array_filter(array_map('trim', explode('/', $attributes['colorway'])));
         if (!Product::where('name', $attributes['name'])->exists()) {
             $product = Product::updateOrCreate(
                 ['sku' => $attributes['sku']],
@@ -75,24 +77,24 @@ class FetchSneakers extends Command
                     'price' => (int)$attributes['retailPrice']
                 ]
             );
-            $this->link_size($product);
+            $this->link_sizes_and_colors($product, $colors);
         }
     }
 
-    private function clean_gender($gender) {
-        if($gender == 'preschool') {
+    private function clean_gender($gender)
+    {
+        if ($gender == 'preschool') {
             $gender = 'infant';
         }
-        if($gender == 'toddler') {
+        if ($gender == 'toddler') {
             $gender = 'infant';
-        }
-        else {
+        } else {
             $gender = $gender;
         }
         return $gender;
     }
 
-    private function link_size($product)
+    private function link_sizes_and_colors($product, $colors)
     {
         $gender_size = [
             'men' => range(39, 47),
@@ -105,11 +107,14 @@ class FetchSneakers extends Command
 
         foreach ($gender_size[$product->gender] as $size) {
             $size_id = Size::where('size', $size)->first()->id;
-            $variant = new Variant();
-            $variant->product_id = $product->id;
-            $variant->size_id = $size_id;
-            $variant->save();
-
+            foreach ($colors as $color) {
+                $color = Color::firstOrCreate(['color' => $color]);
+                $variant = new Variant();
+                $variant->product_id = $product->id;
+                $variant->size_id = $size_id;
+                $variant->color_id = $color->id;
+                $variant->save();
+            }
         }
     }
 }

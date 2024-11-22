@@ -16,13 +16,18 @@ interface Product {
     market_price: number;
     price: number;
     sizes: { id: number; value: number }[];
+    colors: { id: number; value: string }[]; // Add colors here
 }
+
+
+
 
 export default function ProductPage() {
     const [product, setProduct] = useState<Product | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [selectedSize, setSelectedSize] = useState<number | null>(null); // For selected size
     const [quantity, setQuantity] = useState<number>(0); // For quantity
+    const [selectedColor, setSelectedColor] = useState<string | null>(null); // State for selected color
 
     const { addToCart } = useCart(); // Use Cart Context
 
@@ -62,34 +67,24 @@ export default function ProductPage() {
     }
 
     const handleAddToCart = () => {
-
-        if (selectedSize) {
-
+        if (selectedSize && selectedColor) {
             addToCart({
-
                 id: product.id,
-
                 name: product.name,
-
                 price: product.price,
-
                 size: selectedSize,
-
-                quantity: quantity+1,
-
+                color: selectedColor, // Include the selected color
+                quantity: quantity + 1,
                 image: product.image,
-
             });
-            setQuantity(quantity+1)
-            console.log(quantity)
-            //alert("Product added to cart!");
-
+            setQuantity(quantity + 1);
+            console.log(quantity);
         } else {
-
-            alert("Please select a size.");
-
+            alert("Please select a size and color.");
         }
-
+    };
+    const handleColorSelect = (color: string) => {
+        setSelectedColor(color);
     };
 
     const recommendedProducts = [
@@ -117,54 +112,6 @@ export default function ProductPage() {
     const handleSizeSelect = (size: number) => {
         setSelectedSize(size);
     };
-    /*const AddToCartButton = (quantity: number) => {
-        if (quantity){
-            return(
-                <Button
-                    label="Add to Cart"
-                    variant="secondary"
-                    disabled={!selectedSize} // Disable if no size is selected
-                />
-            )
-        } else {
-            return (
-                <div>
-                    <div className="flex items-center space-x-2">
-                        <GrouppedButtons>
-                            <Button
-                                label="-"
-                                onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                                variant="secondary"
-                                className="px-2 py-1"
-                            />
-                            <Input
-                                type="number"
-                                className="w-16 text-center"
-                                variant="secondary"
-                                value={item.quantity.toString()}
-                                onChange={(e) =>
-                                    updateQuantity(item.id, parseInt(e.target.value, 10))
-                                }
-                            />
-                            <Button
-                                label="+"
-                                onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                variant="secondary"
-                                className="px-2 py-1"
-                            />
-                        </GrouppedButtons>
-                    </div>
-                    <Button
-                        icon={<IoTrashBin />}
-                        onClick={() => removeItem(item.id)}
-                        variant="alert"
-                        className="w-10 h-10 ml-2"
-                    />
-                </div>
-            )
-        }
-
-    };*/
     if(quantity<1){
         return (
             <div className="w-screen h-screen flex flex-col overflow-y-auto">
@@ -191,7 +138,24 @@ export default function ProductPage() {
                             Price: <span className="text-blue-600">${product.price}</span>
                         </p>
                         <p className="text-sm text-gray-700 mt-6 w-5/12">{product.story}</p>
-
+                        <div className="mt-6">
+                            <h3 className="text-lg font-bold mb-2">Select Color:</h3>
+                            <div className="flex gap-2 flex-wrap w-6/12">
+                                {product.colors.map((color) => (
+                                    <button
+                                        key={color.id}
+                                        onClick={() => handleColorSelect(color.value)}
+                                        className={`px-4 py-2 border rounded-md ${
+                                            selectedColor === color.value
+                                                ? "bg-blue-600 text-white"
+                                                : "bg-gray-200 text-gray-800"
+                                        }`}
+                                    >
+                                        {color.value}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
                         {/* Size Selection */}
                         <div className="mt-6">
                             <h3 className="text-lg font-bold mb-2">Select Size:</h3>
@@ -221,8 +185,8 @@ export default function ProductPage() {
                             <Button
                                 label="Add to Cart"
                                 variant="secondary"
-                                disabled={!selectedSize && quantity>1} // Disable if no size is selected
-                                onClick={()=>handleAddToCart()}
+                                disabled={!selectedSize || !selectedColor} // Disable if size or color is not selected
+                                onClick={handleAddToCart}
                             />
                         </div>
                     </div>
@@ -281,7 +245,24 @@ export default function ProductPage() {
                             Price: <span className="text-blue-600">${product.price}</span>
                         </p>
                         <p className="text-sm text-gray-700 mt-6 w-5/12">{product.story}</p>
-
+                        <div className="mt-6">
+                            <h3 className="text-lg font-bold mb-2">Select Color:</h3>
+                            <div className="flex gap-2 flex-wrap w-6/12">
+                                {product.colors.map((color) => (
+                                    <button
+                                        key={color.id}
+                                        onClick={() => handleColorSelect(color.value)}
+                                        className={`px-4 py-2 border rounded-md ${
+                                            selectedColor === color.value
+                                                ? "bg-blue-600 text-white"
+                                                : "bg-gray-200 text-gray-800"
+                                        }`}
+                                    >
+                                        {color.value}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
                         {/* Size Selection */}
                         <div className="mt-6">
                             <h3 className="text-lg font-bold mb-2">Select Size:</h3>

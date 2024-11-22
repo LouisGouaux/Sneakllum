@@ -10,6 +10,7 @@ interface CartItem {
     size: number;
     quantity: number;
     image: string;
+    color: string;
 }
 
 // Cart context type

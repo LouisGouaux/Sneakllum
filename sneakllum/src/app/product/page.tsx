@@ -1,9 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useRouter } from 'next/router';
-import Button from "../../../components/Button";
-import { useSearchParams } from "next/navigation";
+import Button from "../../components/Button";
 
+import { useSearchParams } from 'next/navigation'
 interface Product {
     id: number;
     brand: string;
@@ -16,14 +15,15 @@ interface Product {
 }
 
 export default function ProductPage() {
-    const router = useRouter()
+  /*  const searchParams = useSearchParams()
+
+    const search = searchParams.get('search')*/
 
     const [product, setProduct] = useState<Product | null>(null);
     const [error, setError] = useState<string | null>(null);
-    /*const searchParams = useSearchParams();
-    const id = searchParams.get("id");*/
-    const { id } = router.query.slug; // Retrieve the product ID from the route
-    console.log(id)
+    const searchParams = useSearchParams();
+    const id = searchParams.get("id");
+
 
 
     // Fetch product data from the API
@@ -31,7 +31,7 @@ export default function ProductPage() {
         if (id) {
             const fetchProduct = async () => {
                 try {
-                    const response = await fetch(`https://5b8cmbmlsw.preview.infomaniak.websiteapi/product/${id}`);
+                    const response = await fetch(`https://5b8cmbmlsw.preview.infomaniak.websiteapi/products /${id}`);
                     if (!response.ok) {
                         throw new Error("Failed to fetch product data.");
                     }

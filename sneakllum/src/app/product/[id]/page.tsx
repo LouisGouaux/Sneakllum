@@ -1,27 +1,60 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useRouter } from 'next/router';
 import Button from "../../../components/Button";
+import { useSearchParams } from "next/navigation";
 
 interface Product {
+    id: number;
     brand: string;
-    colorway: string;
-    estimatedMarketValue: number;
+    name: string;
+    story: string;
     gender: string;
     image: string;
-    name: string;
-    description: string;
+    market_price: number;
+    price: number;
 }
 
 export default function ProductPage() {
-    const product: Product = {
-        brand: "Nike",
-        colorway: "White/Black",
-        estimatedMarketValue: 150,
-        gender: "Unisex",
-        image: "https://image.goat.com/attachments/product_template_pictures/images/095/297/756/original/1203A430_001.png.png",
-        name: "Nike Air Force 1",
-        description: "The Nike Air Force 1 is a timeless sneaker featuring a sleek design, premium materials, and unparalleled comfort, making it a must-have for all sneaker enthusiasts.",
-    };
+    const router = useRouter()
+
+    const [product, setProduct] = useState<Product | null>(null);
+    const [error, setError] = useState<string | null>(null);
+    /*const searchParams = useSearchParams();
+    const id = searchParams.get("id");*/
+    const { id } = router.query.slug; // Retrieve the product ID from the route
+    console.log(id)
+
+
+    // Fetch product data from the API
+    useEffect(() => {
+        if (id) {
+            const fetchProduct = async () => {
+                try {
+                    const response = await fetch(`https://5b8cmbmlsw.preview.infomaniak.websiteapi/product/${id}`);
+                    if (!response.ok) {
+                        throw new Error("Failed to fetch product data.");
+                    }
+                    const data = await response.json();
+                    setProduct(data);
+                } catch (err) {
+                    setError("Failed to load product. Please try again later.");
+                    console.error(err);
+                }
+            };
+
+            fetchProduct();
+        }
+    }, [id]);
+
+    // Show loading or error states
+    if (!product && !error) {
+        return <div className="text-center mt-10">Loading product...</div>;
+    }
+
+    if (error) {
+        return <div className="text-center mt-10 text-red-500">{error}</div>;
+    }
 
     const recommendedProducts = [
         {
@@ -60,15 +93,15 @@ export default function ProductPage() {
                     <p className="text-lg text-gray-600 mb-4">{product.brand}</p>
 
                     <p className="text-sm font-semibold text-gray-500">
-                        Colorway: <span className="text-gray-700">{product.colorway}</span>
-                    </p>
-                    <p className="text-sm font-semibold text-gray-500">
                         Gender: <span className="text-gray-700">{product.gender}</span>
                     </p>
                     <p className="text-lg font-semibold mt-4">
-                        Market Value: <span className="text-blue-600">${product.estimatedMarketValue}</span>
+                        Market Value: <span className="text-blue-600">${product.market_price}</span>
                     </p>
-                    <p className="text-sm text-gray-700 mt-6 w-5/12">{product.description}</p>
+                    <p className="text-lg font-semibold mt-4">
+                        Price: <span className="text-blue-600">${product.price}</span>
+                    </p>
+                    <p className="text-sm text-gray-700 mt-6 w-5/12">{product.story}</p>
 
                     <div className="mt-6 flex flex-col space-y-4 w-5/12">
                         <Button label="Buy Now" variant="primary" />
@@ -79,7 +112,6 @@ export default function ProductPage() {
 
             {/* Recommended Products Slider */}
             <div className="mt-12 px-6 flex flex-col justify-center items-center">
-
                 <h2 className="text-2xl font-bold mb-6">You Might Also Like</h2>
                 <div className="flex space-x-6 overflow-x-scroll scrollbar-hide flex-row justify-center">
                     {recommendedProducts.map((item) => (

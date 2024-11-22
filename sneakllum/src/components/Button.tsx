@@ -21,23 +21,15 @@ export default function Button({
     noFocusBorder = false,
     className = "",
 }: ButtonProps) {
-    // Classes de base pour les variantes de boutons
     const variantClasses = {
         primary: "bg-primary hover:bg-primaryhover",
-        secondary: "bg-secondary hover:bg-secondaryhover",  // Assure-toi que cette classe est définie dans le fichier tailwind.config.js
+        secondary: "border-black hover:bg-secondaryhover",
         alert: "bg-alert hover:bg-alerthover text-white",
     };
 
-    // Suppression de la bordure si noBorder est true
     const borderClass = noBorder ? "" : "border";
-
-    // Classes de focus (si noFocusBorder est true, elles ne sont pas appliquées)
     const focusClass = noFocusBorder ? "" : "focus:border-secondary focus:ring-1 focus:ring-secondary";
-
-    // Si aucune bordure n'est appliquée, alors définir un fond par défaut
-    const backgroundClass = noBorder ? "" : variantClasses[variant] || variantClasses.primary;
-
-    // Combine les classes de variante, bordure et focus
+    const backgroundClass = `${variantClasses[variant] || variantClasses.primary} ${noBorder ? "" : ""}`;
     const classes = `${backgroundClass} ${borderClass} ${focusClass} ${className}`;
 
     return (

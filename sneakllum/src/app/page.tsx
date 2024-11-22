@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -16,18 +16,19 @@ export default function HomePage() {
   const [bestSellers, setBestSellers] = useState<Product[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchProducts = async (ids: number[]): Promise<Product[]> => {
+  const fetchProductsFromAPI = async (url: string): Promise<Product[]> => {
     try {
-      const products = await Promise.all(
-        ids.map(async (id) => {
-          const response = await fetch(`https://5b8cmbmlsw.preview.infomaniak.website/api/products/${id}`);
-          if (!response.ok) {
-            throw new Error("Erreur lors de la récupération des données");
-          }
-          return await response.json();
-        })
-      );
-      return products;
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error("Erreur lors de la récupération des produits");
+      }
+      const jsonResponse = await response.json();
+
+      if (jsonResponse && Array.isArray(jsonResponse.data)) {
+        return jsonResponse.data;
+      }
+
+      throw new Error("Format inattendu de la réponse de l'API");
     } catch (err) {
       console.error(err);
       setError("Impossible de charger les produits.");
@@ -35,26 +36,36 @@ export default function HomePage() {
     }
   };
 
-  useEffect(() => {
-    const newProductsIds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const fetchProductsData = useCallback(async () => {
     const bestSellersIds = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
+    try {
+      const newProductsData = await fetchProductsFromAPI(
+        "https://5b8cmbmlsw.preview.infomaniak.website/api/products/new"
+      );
+      setNewProducts(newProductsData.slice(0, 10));
 
-    const fetchProductsData = async () => {
-      try {
-        const newProductsData = await fetchProducts(newProductsIds);
-        setNewProducts(newProductsData);
-        const bestSellersData = await fetchProducts(bestSellersIds);
-        setBestSellers(bestSellersData);
-      } catch (err) {
-        console.error(err);
-        setError("Impossible de charger les produits.");
-      }
-    };
-    fetchProductsData();
+      const bestSellersData = await Promise.all(
+        bestSellersIds.map(async (id) => {
+          const response = await fetch(`https://5b8cmbmlsw.preview.infomaniak.website/api/products/${id}`);
+          if (!response.ok) {
+            throw new Error("Erreur lors de la récupération des best-sellers");
+          }
+          return await response.json();
+        })
+      );
+      setBestSellers(bestSellersData);
+    } catch (err) {
+      console.error(err);
+      setError("Impossible de charger les produits.");
+    }
   }, []);
 
+  useEffect(() => {
+    fetchProductsData();
+  }, [fetchProductsData]);
+
   const getImageUrl = (image: string | null): string => {
-    if (!image) {
+    if (!image || image === "[]" || image === "true" || image === "false") {
       return "/images/default-image.jpg";
     }
 
@@ -100,7 +111,7 @@ export default function HomePage() {
                   height={200}
                   className="rounded-lg"
                 />
-                <h3 className="text-lg font-semibold mt-2">{product.name}</h3>
+                <h3 className="text-lg font-semibold mt-2">{product.id}</h3>
                 <p className="text-gray-600">Prix: {product.price}€</p>
               </div>
             ))}

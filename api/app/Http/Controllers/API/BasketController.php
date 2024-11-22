@@ -17,7 +17,7 @@ class BasketController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'it's work
+            'message' => 'it works'
         ]);
     }
 }

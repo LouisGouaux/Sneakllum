@@ -37,22 +37,17 @@ export default function HomePage() {
   };
 
   const fetchProductsData = useCallback(async () => {
-    const bestSellersIds = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
     try {
       const newProductsData = await fetchProductsFromAPI(
         "https://5b8cmbmlsw.preview.infomaniak.website/api/products/new"
       );
       setNewProducts(newProductsData.slice(0, 10));
 
-      const bestSellersData = await Promise.all(
-        bestSellersIds.map(async (id) => {
-          const response = await fetch(`https://5b8cmbmlsw.preview.infomaniak.website/api/products/${id}`);
-          if (!response.ok) {
-            throw new Error("Erreur lors de la récupération des best-sellers");
-          }
-          return await response.json();
-        })
+      const allProductsData = await fetchProductsFromAPI(
+        "https://5b8cmbmlsw.preview.infomaniak.website/api/products"
       );
+      
+      const bestSellersData = allProductsData.slice(0, 10);
       setBestSellers(bestSellersData);
     } catch (err) {
       console.error(err);

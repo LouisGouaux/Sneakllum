@@ -29,12 +29,12 @@ class Product extends Model
 
     public function sizes()
     {
-        return $this->belongsToMany(Size::class, 'variants', 'product_id', 'size_id');
+        return $this->belongsToMany(Size::class, 'variants', 'product_id', 'size_id')->distinct();
     }
 
     public function colors()
     {
-        return $this->belongsToMany(Color::class, 'variants', 'product_id', 'color_id');
+        return $this->belongsToMany(Color::class, 'variants', 'product_id', 'color_id')->distinct();
     }
 
 }

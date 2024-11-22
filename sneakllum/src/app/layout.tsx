@@ -1,6 +1,7 @@
 import "./globals.css";
 import NavBar from "../components/NavBar";
 import { CartProvider } from "@/context/CartContext";
+import { Suspense } from 'react'
 
 export const metadata = {
   title: "My E-commerce App",
@@ -11,15 +12,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
       <html lang="fr">
       <body className="flex flex-col min-h-screen">
-        <CartProvider>
-          <NavBar />
+        <Suspense>
+            <CartProvider>
+              <NavBar />
 
-          <main className="flex-1">{children}</main>
+              <main className="flex-1">{children}</main>
 
-          <footer className="bg-gray-800 text-white text-center p-4">
-            © 2024 My E-commerce App
-          </footer>
-        </CartProvider>
+              <footer className="bg-gray-800 text-white text-center p-4">
+                © 2024 My E-commerce App
+              </footer>
+            </CartProvider>
+        </Suspense>
       </body>
     </html>
   );

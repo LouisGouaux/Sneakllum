@@ -94,6 +94,7 @@ export default function CartPage() {
                                 icon={<IoTrashBin />}
                                 onClick={() => removeItem(item.id)}
                                 variant="alert"
+                                className="ml-2"
                             />
                         </div>
                     ))}

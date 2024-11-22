@@ -28,7 +28,6 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [cart, setCart] = useState<CartItem[]>([]);
 
-    // Load cart from localStorage on mount
     useEffect(() => {
         const storedCart = localStorage.getItem("cart");
         if (storedCart) {
@@ -36,7 +35,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     }, []);
 
-    // Save cart to localStorage on change
     useEffect(() => {
         localStorage.setItem("cart", JSON.stringify(cart));
     }, [cart]);
@@ -61,7 +59,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setCart((prevCart) =>
             prevCart.map((item) =>
                 item.id === id && item.size === size
-                    ? { ...item, quantity }
+                    ? { ...item, quantity: Math.max(1, quantity) }
                     : item
             )
         );
@@ -85,10 +83,17 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 };
 
 // Custom hook to use the cart
+
 export const useCart = () => {
+
     const context = useContext(CartContext);
+
     if (!context) {
+
         throw new Error("useCart must be used within a CartProvider");
+
     }
+
     return context;
+
 };

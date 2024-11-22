@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Button from "../../components/Button";
+import { useSearchParams } from "next/navigation";
 
-import { useSearchParams } from 'next/navigation'
 interface Product {
     id: number;
     brand: string;
@@ -12,26 +12,24 @@ interface Product {
     image: string;
     market_price: number;
     price: number;
+    sizes: { id: number; value: number }[];
 }
 
 export default function ProductPage() {
-  /*  const searchParams = useSearchParams()
-
-    const search = searchParams.get('search')*/
-
     const [product, setProduct] = useState<Product | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [selectedSize, setSelectedSize] = useState<number | null>(null); // For selected size
     const searchParams = useSearchParams();
     const id = searchParams.get("id");
-
-
 
     // Fetch product data from the API
     useEffect(() => {
         if (id) {
             const fetchProduct = async () => {
                 try {
-                    const response = await fetch(`https://5b8cmbmlsw.preview.infomaniak.website/api/products/${id}`);
+                    const response = await fetch(
+                        `https://5b8cmbmlsw.preview.infomaniak.website/api/products/${id}`
+                    );
                     if (!response.ok) {
                         throw new Error("Failed to fetch product data.");
                     }
@@ -77,6 +75,11 @@ export default function ProductPage() {
         },
     ];
 
+    // Handle size selection
+    const handleSizeSelect = (size: number) => {
+        setSelectedSize(size);
+    };
+
     return (
         <div className="w-screen h-screen flex flex-col overflow-y-auto">
             {/* Main Product Section */}
@@ -103,9 +106,37 @@ export default function ProductPage() {
                     </p>
                     <p className="text-sm text-gray-700 mt-6 w-5/12">{product.story}</p>
 
+                    {/* Size Selection */}
+                    <div className="mt-6">
+                        <h3 className="text-lg font-bold mb-2">Select Size:</h3>
+                        <div className="flex gap-2 flex-wrap w-6/12">
+                            {product.sizes.map((size) => (
+                                <button
+                                    key={size.id}
+                                    onClick={() => handleSizeSelect(size.value)}
+                                    className={`px-4 py-2 border rounded-md ${
+                                        selectedSize === size.value
+                                            ? "bg-blue-600 text-white"
+                                            : "bg-gray-200 text-gray-800"
+                                    }`}
+                                >
+                                    {size.value}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
                     <div className="mt-6 flex flex-col space-y-4 w-5/12">
-                        <Button label="Buy Now" variant="primary" />
-                        <Button label="Add to Cart" variant="secondary" />
+                        <Button
+                            label="Buy Now"
+                            variant="primary"
+                            disabled={!selectedSize} // Disable if no size is selected
+                        />
+                        <Button
+                            label="Add to Cart"
+                            variant="secondary"
+                            disabled={!selectedSize} // Disable if no size is selected
+                        />
                     </div>
                 </div>
             </div>

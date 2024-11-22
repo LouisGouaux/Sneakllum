@@ -106,7 +106,7 @@ export default function HomePage() {
                   height={200}
                   className="rounded-lg"
                 />
-                <h3 className="text-lg font-semibold mt-2">{product.id}</h3>
+                <h3 className="text-lg font-semibold mt-2">{product.name}</h3>
                 <p className="text-gray-600">Prix: {product.price}€</p>
               </div>
             ))}
@@ -146,7 +146,7 @@ export default function HomePage() {
             <Link href="/category/man">
               <div className="w-60 h-80 relative group overflow-hidden rounded-lg shadow-lg bg-white">
                 <Image
-                  src="/images/category-man.jpg"
+                  src="https://images.pexels.com/photos/9604303/pexels-photo-9604303.jpeg"
                   alt="Homme"
                   layout="fill"
                   objectFit="cover"
@@ -160,7 +160,7 @@ export default function HomePage() {
             <Link href="/category/woman">
               <div className="w-60 h-80 relative group overflow-hidden rounded-lg shadow-lg bg-white">
                 <Image
-                  src="/images/category-woman.jpg"
+                  src="https://images.pexels.com/photos/3686769/pexels-photo-3686769.jpeg"
                   alt="Femme"
                   layout="fill"
                   objectFit="cover"
@@ -174,7 +174,7 @@ export default function HomePage() {
             <Link href="/category/child">
               <div className="w-60 h-80 relative group overflow-hidden rounded-lg shadow-lg bg-white">
                 <Image
-                  src="/images/category-child.jpg"
+                  src="https://images.pexels.com/photos/1620760/pexels-photo-1620760.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
                   alt="Enfant"
                   layout="fill"
                   objectFit="cover"

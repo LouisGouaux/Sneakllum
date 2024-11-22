@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('basket', [\App\Http\Controllers\API\BasketController::class, 'store']);
-}
+});
 
 Route::post('register', [\App\Http\Controllers\API\AuthController::class, 'register']);
 Route::post('login', [\App\Http\Controllers\API\AuthController::class, 'login']);

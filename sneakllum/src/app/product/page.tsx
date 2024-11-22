@@ -31,7 +31,7 @@ export default function ProductPage() {
         if (id) {
             const fetchProduct = async () => {
                 try {
-                    const response = await fetch(`https://5b8cmbmlsw.preview.infomaniak.websiteapi/products /${id}`);
+                    const response = await fetch(`https://5b8cmbmlsw.preview.infomaniak.website/api/products/${id}`);
                     if (!response.ok) {
                         throw new Error("Failed to fetch product data.");
                     }

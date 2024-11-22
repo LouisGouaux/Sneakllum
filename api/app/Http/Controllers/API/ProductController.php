@@ -16,9 +16,14 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::paginate(20);
-        return response(new ProductCollection($products));
+        return new ProductCollection($products);
     }
 
+    public function new_product()
+    {
+        $products = Product::orderBy('release_date', 'desc')->paginate(20);
+        return new ProductCollection($products);
+    }
     /**
      * Store a newly created resource in storage.
      */

@@ -1,8 +1,9 @@
+import SearchPage from "@/app/catalog/page";
+
 export default function NewPage() {
     return (
         <div>
-            <h2>Nouveau en ce moment</h2>
-            <p>Découvrez les nouveaux produits du moment.</p>
+            <SearchPage title="New"/>
         </div>
     );
 }

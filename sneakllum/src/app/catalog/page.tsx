@@ -11,6 +11,9 @@ interface Product {
     size: string;
     sex: string;
 }
+interface Search {
+    title: string;
+}
 
 const dummyProducts: Product[] = [
     { id: 1, name: "Nike Air Max", image: "https://via.placeholder.com/150", price: 120, color: "red", size: "M", sex: "male" },
@@ -19,7 +22,7 @@ const dummyProducts: Product[] = [
     { id: 4, name: "Reebok Nano", image: "https://via.placeholder.com/150", price: 130, color: "white", size: "M", sex: "female" },
 ];
 
-export default function SearchPage() {
+export default function SearchPage({title}: Search) {
     const [filters, setFilters] = useState({
         color: "",
         size: "",
@@ -46,7 +49,7 @@ export default function SearchPage() {
 
     return (
         <div className="max-w-7xl mx-auto px-4 py-8">
-            <h1 className="text-3xl font-bold mb-8">Search Products</h1>
+            <h1 className="text-3xl font-bold mb-8">Search Products {title}</h1>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                 {/* Filter Sidebar */}
                 <div className="col-span-1 bg-gray-100 p-4 rounded-lg shadow-lg">

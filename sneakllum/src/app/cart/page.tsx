@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Button from "../../components/Button";
+import GrouppedButtons from "../../components/GrouppedButtons";
 import Input from "../../components/Input";
 import { IoTrashBin } from "react-icons/io5";
 
@@ -65,33 +66,35 @@ export default function CartPage() {
                                 <p className="text-gray-600">${item.price}</p>
                             </div>
                             <div className="flex items-center space-x-2">
-                                <Button
-                                    label="-"
-                                    onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                                    variant="secondary"
-                                    className="px-2 py-1 border border-gray-300 rounded-lg hover:bg-gray-100"
-                                />
-                                <Input
-                                    type="number"
-                                    className="w-16 text-center border border-gray-300 rounded-lg"
-                                    variant="secondary"
-                                    value={item.quantity.toString()}
-                                    onChange={(e) =>
-                                        updateQuantity(item.id, parseInt(e.target.value, 10))
-                                    }
-                                />
-                                <Button
-                                    label="+"
-                                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                    variant="secondary"
-                                    className="px-2 py-1 border border-gray-300 rounded-lg hover:bg-gray-100"
-                                />
+                                <GrouppedButtons>
+                                    <Button
+                                        label="-"
+                                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                        variant="secondary"
+                                        className="px-2 py-1"
+                                    />
+                                    <Input
+                                        type="number"
+                                        className="w-16 text-center"
+                                        variant="secondary"
+                                        value={item.quantity.toString()}
+                                        onChange={(e) =>
+                                            updateQuantity(item.id, parseInt(e.target.value, 10))
+                                        }
+                                    />
+                                    <Button
+                                        label="+"
+                                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                        variant="secondary"
+                                        className="px-2 py-1"
+                                    />
+                                </GrouppedButtons>
                             </div>
                             <Button
                                 icon={<IoTrashBin />}
                                 onClick={() => removeItem(item.id)}
                                 variant="alert"
-                            />test
+                            />
                         </div>
                     ))}
                 </div>

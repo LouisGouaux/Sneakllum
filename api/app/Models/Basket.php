@@ -13,4 +13,9 @@ class Basket extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function variants()
+    {
+        return $this->belongsToMany(Variant::class);
+    }
 }

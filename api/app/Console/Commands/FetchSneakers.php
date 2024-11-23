@@ -46,7 +46,10 @@ class FetchSneakers extends Command
                 $pagination = $response->json('meta.pagination');
 
                 foreach ($sneakers as $sneaker) {
-                    $this->store_or_update_sneaker($sneaker['attributes']);
+                    $attributes = $this->clean_data($sneaker['attributes']);
+                    if ($attributes) {
+                        $this->store_or_update_sneaker($attributes);
+                    }
                 }
 
                 $current_page++;
@@ -56,6 +59,18 @@ class FetchSneakers extends Command
             }
         }
         $this->info('Products imported');
+    }
+
+    private function clean_data($attributes)
+    {
+        if (!$attributes['image']['original']) {
+            $attributes = null;
+            return $attributes;
+        }
+        if ($attributes['retailPrice'] == 0) {
+            $attributes['retailPrice'] = $attributes['estimatedMarketValue'];
+        }
+        return $attributes;
     }
 
     private function store_or_update_sneaker(array $attributes)
@@ -74,7 +89,7 @@ class FetchSneakers extends Command
                     'release_date' => Carbon::parse($attributes['releaseDate'])->format('Y-m-d'),
                     'release_year' => (int)$attributes['releaseYear'],
                     'story' => $attributes['story'],
-                    'price' => (int)$attributes['retailPrice']
+                    'price' => (int)$attributes['retailPrice'] * 100
                 ]
             );
             $this->link_sizes_and_colors($product, $colors);

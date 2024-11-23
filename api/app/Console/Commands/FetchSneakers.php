@@ -67,6 +67,10 @@ class FetchSneakers extends Command
             $attributes = null;
             return $attributes;
         }
+        if ($attributes['retailPrice'] and $attributes['estimatedMarketValue'] == 0) {
+            $attributes = null;
+            return $attributes;
+        }
         if ($attributes['retailPrice'] == 0) {
             $attributes['retailPrice'] = $attributes['estimatedMarketValue'];
         }

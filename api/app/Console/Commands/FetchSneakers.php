@@ -47,7 +47,7 @@ class FetchSneakers extends Command
 
                 foreach ($sneakers as $sneaker) {
                     $attributes = $this->clean_data($sneaker['attributes']);
-                    if ($attributes) {
+                    if ($attributes != null) {
                         $this->store_or_update_sneaker($attributes);
                     }
                 }
@@ -63,19 +63,21 @@ class FetchSneakers extends Command
 
     private function clean_data($attributes)
     {
-        if (!$attributes['image']['original']) {
-            $attributes = null;
-            return $attributes;
+        if (empty($attributes['image']['original'] ?? null)) {
+            return null;
         }
-        if ($attributes['retailPrice'] and $attributes['estimatedMarketValue'] == 0) {
-            $attributes = null;
-            return $attributes;
+
+        if (($attributes['retailPrice'] ?? 0) == 0 && ($attributes['estimatedMarketValue'] ?? 0) == 0) {
+            return null;
         }
-        if ($attributes['retailPrice'] == 0) {
+
+        if (($attributes['retailPrice'] ?? 0) == 0) {
             $attributes['retailPrice'] = $attributes['estimatedMarketValue'];
         }
+
         return $attributes;
     }
+
 
     private function store_or_update_sneaker(array $attributes)
     {
@@ -102,15 +104,10 @@ class FetchSneakers extends Command
 
     private function clean_gender($gender)
     {
-        if ($gender == 'preschool') {
-            $gender = 'infant';
-        }
-        if ($gender == 'toddler') {
-            $gender = 'infant';
-        } else {
-            $gender = $gender;
-        }
-        return $gender;
+        return match ($gender) {
+            'preschool', 'toddler' => 'infant',
+            default => $gender,
+        };
     }
 
     private function link_sizes_and_colors($product, $colors)

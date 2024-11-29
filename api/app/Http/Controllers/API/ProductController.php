@@ -14,19 +14,23 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::paginate(20);
+        if ($request->sort === 'new') {
+            $products = $this->new_product();
+        } else {
+            $products = Product::paginate(20);
+        }
         return new ProductCollection($products);
     }
 
-    public function new_product()
+    private function new_product()
     {
         $products = Product::orderBy('release_date', 'desc')->paginate(20);
-        return new ProductCollection($products);
+        return $products;
     }
 
-    public function check_product_stock($id, Request$request)
+    public function check_product_stock($id, Request $request)
     {
         $product_variant = Variant::where('product_id', $id)->where('size_id', $request->size_id)->where('color_id', $request->color_id)->first();
         return response()->json([

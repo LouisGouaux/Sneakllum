@@ -54,7 +54,7 @@ class BasketController extends Controller
             return [
                 'id' => $variant->product->id,
                 'name' => $variant->product->name,
-                'price' => $variant->product->price,
+                'price' => $variant->product->price/100,
                 'image' => $variant->product->image,
                 'size' => [
                     'id' => $variant->size->id,

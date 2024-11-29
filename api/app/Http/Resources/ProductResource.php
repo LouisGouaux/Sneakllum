@@ -21,8 +21,8 @@ class ProductResource extends JsonResource
             'story' => $this->story,
             'gender' => $this->gender,
             'image' => $this->image,
-            'market_price' => $this->market_price,
-            'price' => $this->price,
+            'market_price' => $this->market_price/100,
+            'price' => $this->price/100,
             'sizes' => SizeResource::collection($this->sizes),
             'colors' => ColorResource::collection($this->colors)
         ];

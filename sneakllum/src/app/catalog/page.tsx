@@ -64,7 +64,7 @@ export default function SearchPage({ title }: SearchPageProps) {
     fetchProducts();
   }, [fetchProducts]);
 
-  const handleFilterChange = (filterName: string, value: any) => {
+  const handleFilterChange = (filterName: string, value: unknown) => {
     setFilters((prevFilters) => ({
       ...prevFilters,
       [filterName]: value,

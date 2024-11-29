@@ -18,7 +18,7 @@ class BasketTest extends TestCase
         $response = $this->actingAs($user)->postJson('api/basket', [
             [
                 'product_id' => 1,
-                'size_id' => 1,
+                'size_id' => 24,
                 'color_id' => 1,
                 'quantity' => 1
             ],
@@ -26,7 +26,7 @@ class BasketTest extends TestCase
                 'product_id' => 42,
                 'size_id' => 24,
                 'color_id' => 1,
-                'quantity' => 1
+                'quantity' => 2
             ]
         ]);
 

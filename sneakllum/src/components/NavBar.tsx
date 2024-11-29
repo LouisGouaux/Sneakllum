@@ -11,8 +11,8 @@ export default function NavBar() {
   const { user } = useUser();
 
     useEffect(() => {
-    setIsMenuOpen(false); // Fermer le menu dès qu'il y a un changement dans user (connexion/déconnexion)
-  }, [user]); // Cela sera déclenché chaque fois que l'utilisateur change
+    setIsMenuOpen(false);
+  }, [user]);
 
   return (
     <header className="bg-white text-black shadow p-4">
@@ -92,11 +92,11 @@ export default function NavBar() {
             <AiOutlineShoppingCart className="text-2xl" />
           </Link>
 
-          {user && user.name ? ( // Vérifie si l'utilisateur est connecté
-            <UserProfileMenu /> // Affiche le composant UserProfileMenu pour gérer la déconnexion
+          {user && user.name ? (
+            <UserProfileMenu />
           ) : (
             <Link href="/login" className="hover:text-black transition-all">
-              <AiOutlineUser className="text-2xl" /> {/* Icône de profil */}
+              <AiOutlineUser className="text-2xl" />
             </Link>
           )}
         </div>

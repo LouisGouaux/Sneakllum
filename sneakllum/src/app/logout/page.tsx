@@ -1,15 +1,14 @@
 "use client";
-import { useUser } from "../../context/UserContext"; // Importer le hook useUser
-import { useRouter } from "next/navigation"; // Pour rediriger après déconnexion
+import { useUser } from "../../context/UserContext";
+import { useRouter } from "next/navigation";
 
 export default function Logout() {
-  const { logout } = useUser(); // Récupérer la fonction logout du contexte
+  const { logout } = useUser();
   const router = useRouter();
 
-  // Fonction de déconnexion
   const handleLogout = () => {
-    logout(); // Appeler logout pour réinitialiser le contexte et nettoyer le localStorage
-    router.push("/login"); // Rediriger vers la page de connexion
+    logout();
+    router.push("/login");
   };
 
   return (

@@ -10,7 +10,7 @@ import {useRouter} from "next/navigation";
 export default function CartPage() {
     const router = useRouter();
 
-    const { cart, updateQuantity, removeFromCart } = useCart(); // Use context
+    const { cart, updateQuantity, removeFromCart } = useCart();
 
     const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 

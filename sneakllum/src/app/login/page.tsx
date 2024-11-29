@@ -3,11 +3,11 @@ import React, { useState } from "react";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
 import { useRouter } from "next/navigation";
-import { useUser } from "../../context/UserContext"; // Importer le hook useUser
+import { useUser } from "../../context/UserContext";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { login } = useUser(); // Récupérer la fonction login du contexte
+  const { login } = useUser();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -49,14 +49,12 @@ export default function LoginPage() {
       if (response.ok) {
         const data = await response.json();
 
-        // Accéder à token et first_name de manière propre
-        const { token, first_name } = data.data; // Assurer qu'on accède à data.data
+        const { token, first_name } = data.data;
 
         // Loguer les données pour débogage
         console.log("Token:", token);
         console.log("First Name:", first_name);
 
-        // Enregistrer dans le localStorage et dans le contexte
         login({ name: first_name, email: formData.email }, token);
 
         setSuccess("Login successful!");
@@ -81,7 +79,6 @@ export default function LoginPage() {
   if (isLoading) {
     return (
       <div className="text-center flex justify-center items-center h-96">
-        {/* Loading Spinner */}
       </div>
     );
   } else {

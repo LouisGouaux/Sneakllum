@@ -3,8 +3,8 @@ import { useRouter } from "next/navigation";
 import { useUser } from "../context/UserContext";
 
 const UserProfileMenu = () => {
-  const { user, logout } = useUser(); // Récupère les informations utilisateur et la fonction logout
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // Gère l'état du menu
+  const { user, logout } = useUser();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
 
   // Fonction pour afficher/masquer le menu
@@ -12,23 +12,22 @@ const UserProfileMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  // Fonction pour gérer la déconnexion
   const handleLogout = () => {
-    logout(); // Appelle la fonction logout du contexte
-    router.push("/login"); // Redirige l'utilisateur vers la page de login
+    logout();
+    router.push("/login");
   };
 
   if (!user.name) {
-    return null; // Si l'utilisateur n'est pas connecté, rien ne s'affiche
+    return null;
   }
 
   return (
     <div className="relative">
       <button
         className="text-lg font-semibold"
-        onClick={toggleMenu} // Utilisation de toggleMenu pour gérer l'affichage du menu
+        onClick={toggleMenu}
       >
-        {user.name} {/* Affiche le nom de l'utilisateur */}
+        {user.name}
       </button>
 
       {isMenuOpen && (

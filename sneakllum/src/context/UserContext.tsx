@@ -1,7 +1,6 @@
 "use client";
 import React, { createContext, useState, useContext, useEffect, ReactNode } from "react";
 
-// Définir le type pour le contexte utilisateur
 interface UserContextType {
   user: { name: string | null; email: string | null };
   token: string | null;
@@ -9,10 +8,8 @@ interface UserContextType {
   logout: () => void;
 }
 
-// Créer un contexte utilisateur avec des valeurs par défaut
 const UserContext = createContext<UserContextType | null>(null);
 
-// Hook pour utiliser le contexte
 export const useUser = () => {
   const context = useContext(UserContext);
   if (!context) {
@@ -21,42 +18,36 @@ export const useUser = () => {
   return context;
 };
 
-// Définir le type des enfants du Provider
 interface UserProviderProps {
   children: ReactNode;
 }
 
-// Créer le provider qui encapsule l'application avec le contexte
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
-  // Initialisation des états avec des types appropriés
   const [user, setUser] = useState<{ name: string | null; email: string | null }>({ name: null, email: null });
   const [token, setToken] = useState<string | null>(null);
 
-  // Initialisation du contexte depuis le localStorage
   useEffect(() => {
     const storedUser = localStorage.getItem("first_name");
     const storedToken = localStorage.getItem("token");
 
     if (storedUser && storedToken) {
-      setUser({ name: storedUser, email: "" }); // Email peut être récupéré plus tard si nécessaire
+      setUser({ name: storedUser, email: "" });
       setToken(storedToken);
     }
   }, []);
 
-  // Fonction de login
   const login = (userData: { name: string; email: string }, userToken: string) => {
-    setUser(userData); // Mise à jour de l'état de l'utilisateur
-    setToken(userToken); // Mise à jour du token
-    localStorage.setItem("first_name", userData.name); // Sauvegarde du nom d'utilisateur dans le localStorage
-    localStorage.setItem("token", userToken); // Sauvegarde du token dans le localStorage
+    setUser(userData);
+    setToken(userToken);
+    localStorage.setItem("first_name", userData.name);
+    localStorage.setItem("token", userToken);
   };
 
-  // Fonction de logout
   const logout = () => {
-    setUser({ name: null, email: null }); // Réinitialisation des données utilisateur
-    setToken(null); // Réinitialisation du token
-    localStorage.removeItem("first_name"); // Suppression du nom d'utilisateur du localStorage
-    localStorage.removeItem("token"); // Suppression du token du localStorage
+    setUser({ name: null, email: null });
+    setToken(null);
+    localStorage.removeItem("first_name");
+    localStorage.removeItem("token");
   };
 
   return (

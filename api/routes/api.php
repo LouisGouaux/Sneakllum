@@ -13,6 +13,7 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::post('register', [\App\Http\Controllers\API\AuthController::class, 'register']);
 Route::post('login', [\App\Http\Controllers\API\AuthController::class, 'login']);
 Route::get('products/{id}', [\App\Http\Controllers\API\ProductController::class, 'show']);
+Route::get('products/{id}/recommendations', [\App\Http\Controllers\API\ProductController::class, 'recommendation']);
 Route::get('products/{id}/check', [\App\Http\Controllers\API\ProductController::class, 'check_product_stock']);
 Route::get('products', [\App\Http\Controllers\API\ProductController::class, 'index']);
 Route::get('brands', [\App\Http\Controllers\API\FilterController::class, 'brand_index']);

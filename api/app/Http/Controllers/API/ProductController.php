@@ -44,15 +44,13 @@ class ProductController extends Controller
         return new ProductCollection($products);
     }
 
-    private
-    function new_product()
+    private function new_product()
     {
         $products = Product::orderBy('release_date', 'desc')->paginate(20);
         return $products;
     }
 
-    public
-    function check_product_stock($id, Request $request)
+    public function check_product_stock($id, Request $request)
     {
         $product_variant = Variant::where('product_id', $id)->where('size_id', $request->size_id)->where('color_id', $request->color_id)->first();
         return response()->json([
@@ -74,11 +72,26 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public
-    function show($id)
+    public function show($id)
     {
         $product = Product::find($id);
         return response()->json(new ProductResource($product));
+    }
+
+    public function recommendation($id)
+    {
+        $product = Product::find($id);
+        $recommendations = Product::query()
+            ->where('id', '!=', $product->id)
+            ->where(function ($query) use ($product) {
+                $query->where('brand', $product->brand)
+            ->orWhere('gender', $product->gender)
+            ->orWhereBetween('price', [$product->price * 0.8, $product->price * 1.2]);
+                })
+            ->limit(3)
+            ->get();
+
+        return new ProductCollection($recommendations);
     }
 
     /**

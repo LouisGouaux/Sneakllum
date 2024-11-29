@@ -21,16 +21,15 @@ interface Product {
 export default function ProductPage() {
     const [product, setProduct] = useState<Product | null>(null);
     const [error, setError] = useState<string | null>(null);
-    const [selectedSize, setSelectedSize] = useState<number | null>(null); // For selected size
-    const [quantity, setQuantity] = useState<number>(0); // For quantity
-    const [selectedColor, setSelectedColor] = useState<string | null>(null); // State for selected color
+    const [selectedSize, setSelectedSize] = useState<number | null>(null);
+    const [quantity, setQuantity] = useState<number>(0);
+    const [selectedColor, setSelectedColor] = useState<string | null>(null);
 
-    const { addToCart } = useCart(); // Use Cart Context
+    const { addToCart } = useCart();
 
     const searchParams = useSearchParams();
     const id = searchParams.get("id");
 
-    // Fetch product data from the API
     useEffect(() => {
         if (id) {
             const fetchProduct = async () => {
@@ -53,7 +52,6 @@ export default function ProductPage() {
         }
     }, [id]);
 
-    // Show loading or error states
     if (!product && !error) {
         return <div className="text-center mt-10">Loading product...</div>;
     }
@@ -89,13 +87,12 @@ export default function ProductPage() {
         { id: 3, name: "Reebok Nano", image: "https://via.placeholder.com/150", price: 100 },
     ];
 
-    // Handle size selection
     const handleSizeSelect = (size: number) => {
         setSelectedSize(size);
     };
 
     return (
-        <div className="w-screen h-screen flex flex-col overflow-y-auto">
+        <div className="w-screen flex flex-col overflow-y-auto">
             {/* Main Product Section */}
             <div className="flex flex-row w-full h-2/3">
                 <div className="flex justify-end items-start w-2/4">
@@ -161,7 +158,7 @@ export default function ProductPage() {
                         <Button
                             label="Buy Now"
                             variant="primary"
-                            disabled={!selectedSize} // Disable if no size is selected
+                            disabled={!selectedSize}
                         />
                         <Button
                             label={quantity > 0 ? "Added to Cart. View all items." : "Add to Cart"}

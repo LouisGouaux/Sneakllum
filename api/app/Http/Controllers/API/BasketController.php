@@ -46,7 +46,7 @@ class BasketController extends Controller
     public function show()
     {
         $user = Auth::user();
-        $basket = Basket::with(['variants.product', 'variants.size', 'variants.color'])->where('user_id', $user->id);
+        $basket = Basket::with(['variants.product', 'variants.size', 'variants.color'])->where('user_id', $user->id)->first();
         $products = $basket->variants->map(function ($variant) {
             return [
                 'id' => $variant->product->id,

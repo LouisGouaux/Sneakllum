@@ -31,5 +31,9 @@ class BasketTest extends TestCase
         ]);
 
         $response->assertStatus(200);
+
+        $get_basket = $this->actingAs($user)->getJson('api/basket');
+
+        $get_basket->assertStatus(200);
     }
 }

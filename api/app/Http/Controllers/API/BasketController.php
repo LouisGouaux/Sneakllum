@@ -4,11 +4,13 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Basket;
+use App\Models\Variant;
 use Illuminate\Http\Request;
 
 class BasketController extends Controller
 {
-    public function store(Request$request) {
+    public function store(Request $request)
+    {
         $data = $request->validate([
             '*.product_id' => ['required', 'exists:products,id'],
             '*.size_id' => ['required', 'exists:products,id'],
@@ -20,10 +22,24 @@ class BasketController extends Controller
         $basket->user_id = $data ['user_id'];
         $basket->save();
 
-        
+        foreach ($data as $item) {
+            $variant = Variant::where('product_id', $item['product_id'])
+                ->where('size_id', $item['size_id'])
+                ->where('color_id', $item['color_id'])
+                ->first();
+            if ($variant) {
+                $basket->variants()->syncWithoutDetaching([
+                    $variant->id => $item['quantity']
+                ]);
+            }
+
+        }
         return response()->json([
             'success' => true,
-            'message' => 'it works'
+            'data' => [
+                'basket_id' => $basket->id
+            ],
+            'message' => 'Basket created successfully'
         ]);
     }
 }

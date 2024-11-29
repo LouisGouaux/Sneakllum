@@ -16,10 +16,22 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
+        $request->validate([
+            'sort' => ['string', 'max:5'],
+            'brand' => ['string'],
+            'gender' => ['string', 'max:10']
+        ]);
         if ($request->sort === 'new') {
             $products = $this->new_product();
         } else {
-            $products = Product::paginate(20);
+            $query = Product::query();
+            if ($request->has('brand')) {
+                $query->where('brand', $request->brand);
+            }
+            if ($request->has('gender')) {
+                $query->where('gender', $request->gender);
+            }
+            $products = $query->paginate(20);
         }
         return new ProductCollection($products);
     }

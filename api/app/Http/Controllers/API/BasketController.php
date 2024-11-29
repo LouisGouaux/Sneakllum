@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Basket;
 use App\Models\Variant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BasketController extends Controller
 {
@@ -13,15 +14,12 @@ class BasketController extends Controller
     {
         $data = $request->validate([
             '*.product_id' => ['required', 'exists:products,id'],
-            '*.size_id' => ['required', 'exists:products,id'],
-            '*.color_id' => ['required', 'exists:products,id'],
+            '*.size_id' => ['required', 'exists:sizes,id'],
+            '*.color_id' => ['required', 'exists:colors,id'],
             '*.quantity' => ['required', 'integer', 'min:1']
         ]);
 
-        $basket = new Basket();
-        $basket->user_id = $data ['user_id'];
-        $basket->save();
-
+$basket = Basket::firstOrCreate(['user_id' => Auth::user()->id]);
         foreach ($data as $item) {
             $variant = Variant::where('product_id', $item['product_id'])
                 ->where('size_id', $item['size_id'])
@@ -29,7 +27,7 @@ class BasketController extends Controller
                 ->first();
             if ($variant) {
                 $basket->variants()->syncWithoutDetaching([
-                    $variant->id => $item['quantity']
+                    $variant->id => ['quantity' => $item['quantity']]
                 ]);
             }
 

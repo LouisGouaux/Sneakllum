@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Basket;
 use Illuminate\Http\Request;
 
 class BasketController extends Controller
@@ -15,6 +16,11 @@ class BasketController extends Controller
             '*.quantity' => ['required', 'integer', 'min:1']
         ]);
 
+        $basket = new Basket();
+        $basket->user_id = $data ['user_id'];
+        $basket->save();
+
+        
         return response()->json([
             'success' => true,
             'message' => 'it works'

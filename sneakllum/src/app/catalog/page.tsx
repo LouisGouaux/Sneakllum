@@ -19,9 +19,8 @@ export default function SearchPage() {
 
     // Filters State
     const [filters, setFilters] = useState({
-        sex: "", // 'male', 'female'
-        size: null as number | null, // 20 to 44
-        ageCategory: "", // 'adult', 'child'
+        size: "", // Example sizes: "20", "22", "24"
+        category: "", // 'men', 'women', 'unisex', 'youth', 'child', 'infant'
         isNew: false, // true for new items
     });
 
@@ -30,9 +29,8 @@ export default function SearchPage() {
         try {
             const query = new URLSearchParams({
                 page: currentPage.toString(),
-                ...(filters.sex && { sex: filters.sex }),
-                ...(filters.size && { size: filters.size.toString() }),
-                ...(filters.ageCategory && { age_category: filters.ageCategory }),
+                ...(filters.size && { size: filters.size }),
+                ...(filters.category && { gender: filters.category }),
                 ...(filters.isNew && { new: "true" }), // Use 'true' for new items
             }).toString();
 
@@ -81,37 +79,41 @@ export default function SearchPage() {
 
             {/* Filters Section */}
             <div className="mb-6 flex flex-wrap gap-4">
-                {/* Filter: Sex */}
+                {/* Filter: Size */}
                 <select
-                    value={filters.sex}
-                    onChange={(e) => handleFilterChange("sex", e.target.value)}
+                    value={filters.size}
+                    onChange={(e) => handleFilterChange("size", e.target.value)}
                     className="border p-2 rounded"
                 >
-                    <option value="">All Genders</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
+                    <option value="">All Sizes</option>
+                    <option value="20">20</option>
+                    <option value="22">22</option>
+                    <option value="24">24</option>
+                    <option value="26">26</option>
+                    <option value="28">28</option>
+                    <option value="30">30</option>
+                    <option value="32">32</option>
+                    <option value="34">34</option>
+                    <option value="36">36</option>
+                    <option value="38">38</option>
+                    <option value="40">40</option>
+                    <option value="42">42</option>
+                    <option value="44">44</option>
                 </select>
 
-                {/* Filter: Size */}
-                <input
-                    type="number"
-                    placeholder="Size (20-44)"
-                    value={filters.size || ""}
-                    onChange={(e) => handleFilterChange("size", Number(e.target.value))}
-                    className="border p-2 rounded w-24"
-                    min={20}
-                    max={44}
-                />
-
-                {/* Filter: Age Category */}
+                {/* Filter: Category */}
                 <select
-                    value={filters.ageCategory}
-                    onChange={(e) => handleFilterChange("ageCategory", e.target.value)}
+                    value={filters.category}
+                    onChange={(e) => handleFilterChange("category", e.target.value)}
                     className="border p-2 rounded"
                 >
-                    <option value="">All Ages</option>
-                    <option value="adult">Adult</option>
+                    <option value="">All Categories</option>
+                    <option value="men">Men</option>
+                    <option value="women">Women</option>
+                    <option value="unisex">Unisex</option>
+                    <option value="youth">Youth</option>
                     <option value="child">Child</option>
+                    <option value="infant">Infant</option>
                 </select>
 
                 {/* Filter: New Items */}

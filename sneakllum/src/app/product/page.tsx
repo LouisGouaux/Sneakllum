@@ -92,7 +92,7 @@ export default function ProductPage() {
     };
 
     return (
-        <div className="w-screen h-screen flex flex-col overflow-y-auto">
+        <div className="w-screen flex flex-col overflow-y-auto">
             {/* Main Product Section */}
             <div className="flex flex-row w-full h-2/3">
                 <div className="flex justify-end items-start w-2/4">

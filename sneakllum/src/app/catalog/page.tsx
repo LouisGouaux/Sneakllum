@@ -78,7 +78,7 @@ export default function SearchPage({title}) {
     };
 
     return (
-        <div className="w-screen h-screen p-6 flex flex-col">
+        <div className="w-screen p-6 flex flex-col">
             <h1 className="text-2xl font-bold mb-4">Search Results</h1>
 
             {/* Filters Section */}

@@ -36,4 +36,12 @@ class BasketTest extends TestCase
 
         $get_basket->assertStatus(200);
     }
+
+    public function test_user_can_see_an_empty_basket() {
+        $user = User::factory()->create();
+        $response = $this->actingAs($user)->getJson('api/basket');
+
+        $response->assertStatus(200);
+
+    }
 }

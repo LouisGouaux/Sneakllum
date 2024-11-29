@@ -35,7 +35,7 @@ export default function SearchPage({title}) {
                 page: currentPage.toString(),
                 ...(filters.size && { size: filters.size }),
                 ...(filters.category && { gender: filters.category }),
-                ...(filters.isNew && { new: "true" }), // Use 'true' for new items
+                ...(filters.isNew && { sort: "new" }), // Use 'true' for new items
             }).toString();
 
             const response = await fetch(

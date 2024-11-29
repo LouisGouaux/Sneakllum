@@ -39,7 +39,7 @@ export default function HomePage() {
   const fetchProductsData = useCallback(async () => {
     try {
       const newProductsData = await fetchProductsFromAPI(
-        "https://5b8cmbmlsw.preview.infomaniak.website/api/products/new"
+        "https://5b8cmbmlsw.preview.infomaniak.website/api/products?sort=new"
       );
       setNewProducts(newProductsData.slice(0, 10));
 

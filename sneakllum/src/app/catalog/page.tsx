@@ -12,7 +12,11 @@ interface Product {
     image: string;
 }
 
-export default function SearchPage({title}) {
+interface SearchPageProps {
+  title: string;
+}
+
+export default function SearchPage({ title }: SearchPageProps) {
     const router = useRouter();
 
     const [products, setProducts] = useState<Product[]>([]);

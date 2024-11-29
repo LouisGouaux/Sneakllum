@@ -1,11 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { AiOutlineSearch, AiOutlineUser, AiOutlineShoppingCart } from "react-icons/ai";
+import { useUser } from "../context/UserContext";
+import UserProfileMenu from "../components/UserProfileMenu"
 
 export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user } = useUser();
+
+    useEffect(() => {
+    setIsMenuOpen(false);
+  }, [user]);
 
   return (
     <header className="bg-white text-black shadow p-4">
@@ -82,11 +89,16 @@ export default function NavBar() {
 
         <div className="flex space-x-6">
           <Link href="/cart" className="hover:text-black transition-all">
-                <AiOutlineShoppingCart className="text-2xl" />
+            <AiOutlineShoppingCart className="text-2xl" />
           </Link>
-          <Link href="/login" className="hover:text-black transition-all">
-                <AiOutlineUser className="text-2xl" />
-          </Link>
+
+          {user && user.name ? (
+            <UserProfileMenu />
+          ) : (
+            <Link href="/login" className="hover:text-black transition-all">
+              <AiOutlineUser className="text-2xl" />
+            </Link>
+          )}
         </div>
       </nav>
     </header>

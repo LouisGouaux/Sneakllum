@@ -60,11 +60,22 @@ class ProductController extends Controller
         ]);
     }
 
+    public function search(Request $request) {
+        $request->validate([
+            'query' => ['required', 'string', 'min:3']
+        ]);
+
+        $query = $request->input('query');
+        $products = Product::where('name', 'like', '%' . $query . '%')
+            ->orWhere('brand', 'like', '%' . $query . '%')
+            ->paginate(20);
+
+        return new ProductCollection($products);
+    }
     /**
      * Store a newly created resource in storage.
      */
-    public
-    function store(Request $request)
+    public function store(Request $request)
     {
         //
     }

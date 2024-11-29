@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductCollection;
+use App\Http\Resources\ProductResource;
 use App\Models\Basket;
 use App\Models\Variant;
 use Illuminate\Http\Request;
@@ -44,12 +45,24 @@ class BasketController extends Controller
 
     public function show($id)
     {
-        $basket = Basket::with(['variants.product'])->find($id);
+        $basket = Basket::with(['variants.product', 'variants.size', 'variants.color'])->find($id);
         $products = $basket->variants->map(function ($variant) {
-            return $variant->product; // Assuming 'product' relationship is defined in the Variant model
+            return [
+                'id' => $variant->product->id,
+                'name' => $variant->product->name,
+                'price' => $variant->product->price,
+                'image' => $variant->product->image,
+                'size' => [
+                    'id' => $variant->size->id,
+                    'value' => $variant->size->size
+                ],
+                'color' => [
+                    'id' => $variant->color->id,
+                    'value' => $variant->color->color
+                ]
+            ];
         });
 
-
-        return new ProductCollection($products);
+        return response()->json($products);
     }
 }

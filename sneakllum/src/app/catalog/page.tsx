@@ -1,15 +1,14 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Button from "../../components/Button";
 import { useRouter } from "next/navigation";
 
-
 interface Product {
-    id: number;
-    brand: string;
-    name: string;
-    price: number;
-    image: string;
+  id: number;
+  brand: string;
+  name: string;
+  price: number;
+  image: string;
 }
 
 interface SearchPageProps {
@@ -17,69 +16,69 @@ interface SearchPageProps {
 }
 
 export default function SearchPage({ title }: SearchPageProps) {
-    const router = useRouter();
+  const router = useRouter();
 
-    const [products, setProducts] = useState<Product[]>([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [totalPages, setTotalPages] = useState<number>(1);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [totalPages, setTotalPages] = useState<number>(1);
 
-    // Filters State
-    const [filters, setFilters] = useState({
-        size: "", // Example sizes: "20", "22", "24"
-        category: title, // 'men', 'women', 'unisex', 'youth', 'child', 'infant'
-        isNew: false, // true for new items
-    });
+  // Filters State
+  const [filters, setFilters] = useState({
+    size: "", // Example sizes: "20", "22", "24"
+    category: title, // 'men', 'women', 'unisex', 'youth', 'child', 'infant'
+    isNew: false, // true for new items
+  });
 
-    const fetchProducts = async () => {
-        setIsLoading(true);
-        try {
-            const query = new URLSearchParams({
-                page: currentPage.toString(),
-                ...(filters.size && { size: filters.size }),
-                ...(filters.category && { gender: filters.category }),
-                ...(filters.isNew && { sort: "new" }), // Use 'true' for new items
-            }).toString();
+  const fetchProducts = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const query = new URLSearchParams({
+        page: currentPage.toString(),
+        ...(filters.size && { size: filters.size }),
+        ...(filters.category && { gender: filters.category }),
+        ...(filters.isNew && { sort: "new" }),
+      }).toString();
 
-            const response = await fetch(
-                `https://5b8cmbmlsw.preview.infomaniak.website/api/products?${query}`
-            );
+      const response = await fetch(
+        `https://5b8cmbmlsw.preview.infomaniak.website/api/products?${query}`
+      );
 
-            if (!response.ok) {
-                throw new Error("Failed to fetch products.");
-            }
+      if (!response.ok) {
+        throw new Error("Failed to fetch products.");
+      }
 
-            const data = await response.json();
-            setProducts(data.data);
-            setTotalPages(data.meta.last_page);
-        } catch (err) {
-            setError("Failed to load products. Please try again later.");
-            console.error(err);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+      const data = await response.json();
+      setProducts(data.data);
+      setTotalPages(data.meta.last_page);
+    } catch (err) {
+      setError("Failed to load products. Please try again later.");
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [currentPage, filters]);
 
-    useEffect(() => {
-        fetchProducts();
-    }, [currentPage, filters]);
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
 
-    const handleFilterChange = (filterName: string, value: any) => {
-        setFilters((prevFilters) => ({
-            ...prevFilters,
-            [filterName]: value,
-        }));
-        setCurrentPage(1); // Reset to first page on filter change
-    };
+  const handleFilterChange = (filterName: string, value: any) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [filterName]: value,
+    }));
+    setCurrentPage(1); // Reset to first page on filter change
+  };
 
-    const handleNextPage = () => {
-        if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
-    };
+  const handleNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
+  };
 
-    const handlePreviousPage = () => {
-        if (currentPage > 1) setCurrentPage((prev) => prev - 1);
-    };
+  const handlePreviousPage = () => {
+    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
+  };
 
     return (
         <div className="w-screen p-6 flex flex-col">

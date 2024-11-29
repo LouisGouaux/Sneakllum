@@ -12,7 +12,7 @@ interface Product {
     image: string;
 }
 
-export default function SearchPage() {
+export default function SearchPage({title}) {
     const router = useRouter();
 
     const [products, setProducts] = useState<Product[]>([]);
@@ -24,7 +24,7 @@ export default function SearchPage() {
     // Filters State
     const [filters, setFilters] = useState({
         size: "", // Example sizes: "20", "22", "24"
-        category: "", // 'men', 'women', 'unisex', 'youth', 'child', 'infant'
+        category: title, // 'men', 'women', 'unisex', 'youth', 'child', 'infant'
         isNew: false, // true for new items
     });
 

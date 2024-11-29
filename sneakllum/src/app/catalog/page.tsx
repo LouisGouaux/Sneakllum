@@ -1,125 +1,193 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "../../components/Button";
+import { useRouter } from "next/navigation";
+
 
 interface Product {
     id: number;
+    brand: string;
     name: string;
-    image: string;
     price: number;
-    color: string;
-    size: string;
-    sex: string;
-}
-interface Search {
-    title: string;
+    image: string;
 }
 
-const dummyProducts: Product[] = [
-    { id: 1, name: "Nike Air Max", image: "https://via.placeholder.com/150", price: 120, color: "red", size: "M", sex: "male" },
-    { id: 2, name: "Adidas Ultraboost", image: "https://via.placeholder.com/150", price: 150, color: "blue", size: "L", sex: "female" },
-    { id: 3, name: "Puma RS-X", image: "https://via.placeholder.com/150", price: 100, color: "black", size: "S", sex: "male" },
-    { id: 4, name: "Reebok Nano", image: "https://via.placeholder.com/150", price: 130, color: "white", size: "M", sex: "female" },
-];
+export default function SearchPage({title}) {
+    const router = useRouter();
 
-export default function SearchPage({title}: Search) {
+    const [products, setProducts] = useState<Product[]>([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [totalPages, setTotalPages] = useState<number>(1);
+
+    // Filters State
     const [filters, setFilters] = useState({
-        color: "",
-        size: "",
-        sex: "",
+        size: "", // Example sizes: "20", "22", "24"
+        category: title, // 'men', 'women', 'unisex', 'youth', 'child', 'infant'
+        isNew: false, // true for new items
     });
 
-    const [filteredProducts, setFilteredProducts] = useState(dummyProducts);
+    const fetchProducts = async () => {
+        setIsLoading(true);
+        try {
+            const query = new URLSearchParams({
+                page: currentPage.toString(),
+                ...(filters.size && { size: filters.size }),
+                ...(filters.category && { gender: filters.category }),
+                ...(filters.isNew && { sort: "new" }), // Use 'true' for new items
+            }).toString();
 
-    const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const { name, value } = e.target;
-        setFilters((prev) => ({ ...prev, [name]: value }));
+            const response = await fetch(
+                `https://5b8cmbmlsw.preview.infomaniak.website/api/products?${query}`
+            );
 
-        // Filter products based on selected filters
-        const updatedProducts = dummyProducts.filter((product) => {
-            const matchesColor = !filters.color || product.color === filters.color;
-            const matchesSize = !filters.size || product.size === filters.size;
-            const matchesSex = !filters.sex || product.sex === filters.sex;
+            if (!response.ok) {
+                throw new Error("Failed to fetch products.");
+            }
 
-            return matchesColor && matchesSize && matchesSex;
-        });
+            const data = await response.json();
+            setProducts(data.data);
+            setTotalPages(data.meta.last_page);
+        } catch (err) {
+            setError("Failed to load products. Please try again later.");
+            console.error(err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
-        setFilteredProducts(updatedProducts);
+    useEffect(() => {
+        fetchProducts();
+    }, [currentPage, filters]);
+
+    const handleFilterChange = (filterName: string, value: any) => {
+        setFilters((prevFilters) => ({
+            ...prevFilters,
+            [filterName]: value,
+        }));
+        setCurrentPage(1); // Reset to first page on filter change
+    };
+
+    const handleNextPage = () => {
+        if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
+    };
+
+    const handlePreviousPage = () => {
+        if (currentPage > 1) setCurrentPage((prev) => prev - 1);
     };
 
     return (
-        <div className="max-w-7xl mx-auto px-4 py-8">
-            <h1 className="text-3xl font-bold mb-8">Search Products {title}</h1>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-                {/* Filter Sidebar */}
-                <div className="col-span-1 bg-gray-100 p-4 rounded-lg shadow-lg">
-                    <h2 className="text-lg font-bold mb-4">Filters</h2>
-                    <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-700">Color</label>
-                        <select
-                            name="color"
-                            value={filters.color}
-                            onChange={handleFilterChange}
-                            className="w-full mt-1 p-2 border border-gray-300 rounded-lg"
-                        >
-                            <option value="">All</option>
-                            <option value="red">Red</option>
-                            <option value="blue">Blue</option>
-                            <option value="black">Black</option>
-                            <option value="white">White</option>
-                        </select>
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-700">Size</label>
-                        <select
-                            name="size"
-                            value={filters.size}
-                            onChange={handleFilterChange}
-                            className="w-full mt-1 p-2 border border-gray-300 rounded-lg"
-                        >
-                            <option value="">All</option>
-                            <option value="S">Small</option>
-                            <option value="M">Medium</option>
-                            <option value="L">Large</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Sex</label>
-                        <select
-                            name="sex"
-                            value={filters.sex}
-                            onChange={handleFilterChange}
-                            className="w-full mt-1 p-2 border border-gray-300 rounded-lg"
-                        >
-                            <option value="">All</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                        </select>
-                    </div>
-                </div>
+        <div className="w-screen h-screen p-6 flex flex-col">
+            <h1 className="text-2xl font-bold mb-4">Search Results</h1>
 
-                {/* Product List */}
-                <div className="col-span-3 grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {filteredProducts.map((product) => (
-                        <div key={product.id} className="border p-4 rounded-lg shadow-lg">
+            {/* Filters Section */}
+            <div className="mb-6 flex flex-wrap gap-4">
+                {/* Filter: Size */}
+                <select
+                    value={filters.size}
+                    onChange={(e) => handleFilterChange("size", e.target.value)}
+                    className="border p-2 rounded"
+                >
+                    <option value="">All Sizes</option>
+                    <option value="20">20</option>
+                    <option value="22">22</option>
+                    <option value="24">24</option>
+                    <option value="26">26</option>
+                    <option value="28">28</option>
+                    <option value="30">30</option>
+                    <option value="32">32</option>
+                    <option value="34">34</option>
+                    <option value="36">36</option>
+                    <option value="38">38</option>
+                    <option value="40">40</option>
+                    <option value="42">42</option>
+                    <option value="44">44</option>
+                </select>
+
+                {/* Filter: Category */}
+                <select
+                    value={filters.category}
+                    onChange={(e) => handleFilterChange("category", e.target.value)}
+                    className="border p-2 rounded"
+                >
+                    <option value="">All Categories</option>
+                    <option value="men">Men</option>
+                    <option value="women">Women</option>
+                    <option value="unisex">Unisex</option>
+                    <option value="youth">Youth</option>
+                    <option value="child">Child</option>
+                    <option value="infant">Infant</option>
+                </select>
+
+                {/* Filter: New Items */}
+                <label className="flex items-center space-x-2">
+                    <input
+                        type="checkbox"
+                        checked={filters.isNew}
+                        onChange={(e) => handleFilterChange("isNew", e.target.checked)}
+                    />
+                    <span>New Items</span>
+                </label>
+            </div>
+
+            {/* Products Section */}
+            {isLoading ? (
+                <div className="text-center mt-10">Loading products...</div>
+            ) : error ? (
+                <div className="text-center mt-10 text-red-500">{error}</div>
+            ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    {products.map((product) => (
+                        <div
+                            key={product.id}
+                            className="p-4 border border-gray-200 rounded-lg shadow-md"
+                        >
                             <img
                                 src={product.image}
                                 alt={product.name}
-                                className="w-full h-40 object-cover rounded-lg mb-4"
+                                className="w-full h-40 object-cover rounded-md mb-4"
                             />
-                            <h2 className="text-lg font-bold">{product.name}</h2>
-                            <p className="text-gray-600">${product.price}</p>
-                            <p className="text-sm text-gray-500">Color: {product.color}</p>
-                            <p className="text-sm text-gray-500">Size: {product.size}</p>
-                            <p className="text-sm text-gray-500">Sex: {product.sex}</p>
+                            <h3 className="text-lg font-bold">{product.name}</h3>
+                            <p className="text-gray-600">{product.brand}</p>
+                            <p className="text-blue-600 font-semibold">${product.price / 100}</p>
                             <Button
-                                label="Add to Cart"
-                                className="mt-4"
+                                label="View Product"
                                 variant="primary"
+                                className="mt-4 w-full"
+                                onClick={() => router.push(`/product/?id=`+ product.id
+                                )}
                             />
                         </div>
                     ))}
                 </div>
+            )}
+
+            {/* Pagination Controls */}
+            <div className="flex justify-center items-center mt-8 space-x-4">
+                <button
+                    onClick={handlePreviousPage}
+                    disabled={currentPage === 1}
+                    className={`px-4 py-2 border rounded-md ${
+                        currentPage === 1 ? "bg-gray-300 text-gray-500" : "bg-blue-600 text-white"
+                    }`}
+                >
+                    Previous
+                </button>
+                <span className="font-semibold">
+          Page {currentPage} of {totalPages}
+        </span>
+                <button
+                    onClick={handleNextPage}
+                    disabled={currentPage === totalPages}
+                    className={`px-4 py-2 border rounded-md ${
+                        currentPage === totalPages
+                            ? "bg-gray-300 text-gray-500"
+                            : "bg-blue-600 text-white"
+                    }`}
+                >
+                    Next
+                </button>
             </div>
         </div>
     );

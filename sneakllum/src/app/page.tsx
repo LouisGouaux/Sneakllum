@@ -2,6 +2,7 @@
 import { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import {useRouter} from "next/navigation";
 
 interface Product {
   id: number;
@@ -12,6 +13,7 @@ interface Product {
 }
 
 export default function HomePage() {
+  const router = useRouter();
   const [newProducts, setNewProducts] = useState<Product[]>([]);
   const [bestSellers, setBestSellers] = useState<Product[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -97,7 +99,7 @@ export default function HomePage() {
           <div className="flex overflow-x-scroll space-x-4 scrollbar-hide">
             {error && <p className="text-red-500">{error}</p>}
             {newProducts.map((product) => (
-              <div key={product.id} className="min-w-[200px] bg-white rounded-lg shadow-lg p-4">
+              <div key={product.id} className="min-w-[200px] bg-white rounded-lg shadow-lg p-4" onClick={() => router.push(`/product/?id=`+ product.id)}>
                 <h3 className="text-lg font-semibold mt-2">{product.brand}</h3>
                 <Image
                   src={getImageUrl(product.image)}
@@ -121,7 +123,7 @@ export default function HomePage() {
           <div className="flex overflow-x-scroll space-x-4 scrollbar-hide">
             {error && <p className="text-red-500">{error}</p>}
             {bestSellers.map((product) => (
-              <div key={product.id} className="min-w-[200px] bg-white rounded-lg shadow-lg p-4">
+              <div key={product.id} className="min-w-[200px] bg-white rounded-lg shadow-lg p-4" onClick={() => router.push(`/product/?id=`+ product.id)}>
                 <h3 className="text-lg font-semibold mt-2">{product.brand}</h3>
                 <Image
                   src={getImageUrl(product.image)}

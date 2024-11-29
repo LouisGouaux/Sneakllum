@@ -1,6 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Button from "../../components/Button";
+import { useRouter } from "next/navigation";
+
 
 interface Product {
     id: number;
@@ -11,6 +13,8 @@ interface Product {
 }
 
 export default function SearchPage() {
+    const router = useRouter();
+
     const [products, setProducts] = useState<Product[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
@@ -151,6 +155,8 @@ export default function SearchPage() {
                                 label="View Product"
                                 variant="primary"
                                 className="mt-4 w-full"
+                                onClick={() => router.push(`/product/?id=`+ product.id
+                                )}
                             />
                         </div>
                     ))}

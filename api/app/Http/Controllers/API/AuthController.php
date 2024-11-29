@@ -57,4 +57,13 @@ class AuthController extends Controller
             'message' => 'Invalid credentials'
         ], 422);
     }
+
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'User successfully logged out'
+        ], 200);
+    }
 }

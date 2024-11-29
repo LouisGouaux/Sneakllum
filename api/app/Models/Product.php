@@ -13,7 +13,6 @@ class Product extends Model
         "sku",
         "brand",
         "name",
-        "color",
         "market_price",
         "gender",
         "image",
@@ -22,4 +21,20 @@ class Product extends Model
         "story",
         "price"
     ];
+
+    public function variants()
+    {
+        return $this->hasMany(Variant::class);
+    }
+
+    public function sizes()
+    {
+        return $this->belongsToMany(Size::class, 'variants', 'product_id', 'size_id')->distinct();
+    }
+
+    public function colors()
+    {
+        return $this->belongsToMany(Color::class, 'variants', 'product_id', 'color_id')->distinct();
+    }
+
 }

@@ -43,7 +43,7 @@ class BasketController extends Controller
         ]);
     }
 
-    public function show($id)
+    public function show()
     {
         $user = Auth::user();
         $basket = Basket::with(['variants.product', 'variants.size', 'variants.color'])->where('user_id', $user->id);
@@ -60,7 +60,8 @@ class BasketController extends Controller
                 'color' => [
                     'id' => $variant->color->id,
                     'value' => $variant->color->color
-                ]
+                ],
+                'quantity' => $variant->pivot->quantity
             ];
         });
 

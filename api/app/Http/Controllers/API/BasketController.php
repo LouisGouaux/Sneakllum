@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ProductCollection;
 use App\Models\Basket;
 use App\Models\Variant;
 use Illuminate\Http\Request;
@@ -19,7 +20,7 @@ class BasketController extends Controller
             '*.quantity' => ['required', 'integer', 'min:1']
         ]);
 
-$basket = Basket::firstOrCreate(['user_id' => Auth::user()->id]);
+        $basket = Basket::firstOrCreate(['user_id' => Auth::user()->id]);
         foreach ($data as $item) {
             $variant = Variant::where('product_id', $item['product_id'])
                 ->where('size_id', $item['size_id'])
@@ -39,5 +40,16 @@ $basket = Basket::firstOrCreate(['user_id' => Auth::user()->id]);
             ],
             'message' => 'Basket created successfully'
         ]);
+    }
+
+    public function show($id)
+    {
+        $basket = Basket::with(['variants.product'])->find($id);
+        $products = $basket->variants->map(function ($variant) {
+            return $variant->product; // Assuming 'product' relationship is defined in the Variant model
+        });
+
+
+        return new ProductCollection($products);
     }
 }

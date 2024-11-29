@@ -5,8 +5,11 @@ import GrouppedButtons from "../../components/GrouppedButtons";
 import Input from "../../components/Input";
 import { IoTrashBin } from "react-icons/io5";
 import { useCart } from "@/context/CartContext";
+import {useRouter} from "next/navigation";
 
 export default function CartPage() {
+    const router = useRouter();
+
     const { cart, updateQuantity, removeFromCart } = useCart(); // Use context
 
     const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -95,7 +98,7 @@ export default function CartPage() {
                         <p>Total</p>
                         <p>${totalPrice.toFixed(2)}</p>
                     </div>
-                    <Button label="Checkout" variant="primary" className="w-full mt-6" />
+                    <Button label="Checkout" variant="primary" className="w-full mt-6"  onClick={() => router.push(`/checkout`)}/>
                 </div>
             </div>
         </div>

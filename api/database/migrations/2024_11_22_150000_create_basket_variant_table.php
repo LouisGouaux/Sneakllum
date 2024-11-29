@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreign('basket_id')->references('id')->on('baskets');
             $table->unsignedBigInteger('variant_id');
             $table->foreign('variant_id')->references('id')->on('variants');
+            $table->integer('quantity')->default(1);
             $table->timestamps();
         });
     }

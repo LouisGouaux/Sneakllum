@@ -6,7 +6,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('logout', [\App\Http\Controllers\API\AuthController::class, 'logout']);
     Route::post('basket', [\App\Http\Controllers\API\BasketController::class, 'store']);
-    Route::get('basket/', [\App\Http\Controllers\API\BasketController::class, 'show']);
+    Route::get('basket', [\App\Http\Controllers\API\BasketController::class, 'show']);
+    Route::delete('basket', [\App\Http\Controllers\API\BasketController::class, 'delete_products']);
 
 });
 

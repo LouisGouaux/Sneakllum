@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->string('user_last_name');
             $table->string('user_email');
             $table->string('user_phone');
-            $table->bigInteger()er('total_amount');
+            $table->bigInteger('total_amount');
             $table->longText('shipping_address');
             $table->longText('billing_address');
             $table->string('status')->default('pending');

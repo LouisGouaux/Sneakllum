@@ -56,6 +56,13 @@ protected $user;
 
     public function test_user_can_delete_product() {
 
+        $response = $this->actingAs($this->user)->postJson('api/basket', [[
+            'product_id' => 1,
+            'size_id' => 24,
+            'color_id' => 1,
+            'quantity' => 1
+        ]]);
+
         $response = $this->actingAs($this->user)->deleteJson('api/basket', [[
             'product_id' => 1,
             'size_id' => 24,

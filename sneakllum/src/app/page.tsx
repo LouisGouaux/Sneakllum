@@ -99,7 +99,7 @@ export default function HomePage() {
           <div className="flex overflow-x-scroll space-x-4 scrollbar-hide">
             {error && <p className="text-red-500">{error}</p>}
             {newProducts.map((product) => (
-              <div key={product.id} className="min-w-[200px] bg-white rounded-lg shadow-lg p-4" onClick={() => router.push(`/product/?id=`+ product.id)}>
+              <div key={product.id} className="min-w-[250px] bg-white rounded-lg shadow-lg p-4" onClick={() => router.push(`/product/?id=`+ product.id)}>
                 <h3 className="text-lg font-semibold mt-2">{product.brand}</h3>
                 <Image
                   src={getImageUrl(product.image)}
@@ -123,7 +123,7 @@ export default function HomePage() {
           <div className="flex overflow-x-scroll space-x-4 scrollbar-hide">
             {error && <p className="text-red-500">{error}</p>}
             {bestSellers.map((product) => (
-              <div key={product.id} className="min-w-[200px] bg-white rounded-lg shadow-lg p-4" onClick={() => router.push(`/product/?id=`+ product.id)}>
+              <div key={product.id} className="min-w-[250px] bg-white rounded-lg shadow-lg p-4" onClick={() => router.push(`/product/?id=`+ product.id)}>
                 <h3 className="text-lg font-semibold mt-2">{product.brand}</h3>
                 <Image
                   src={getImageUrl(product.image)}

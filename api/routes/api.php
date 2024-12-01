@@ -19,3 +19,4 @@ Route::get('products/{id}/recommendations', [\App\Http\Controllers\API\ProductCo
 Route::get('products/{id}/check', [\App\Http\Controllers\API\ProductController::class, 'check_product_stock']);
 Route::get('products', [\App\Http\Controllers\API\ProductController::class, 'index']);
 Route::get('brands', [\App\Http\Controllers\API\FilterController::class, 'brand_index']);
+Route::post('order', [\App\Http\Controllers\API\OrderController::class, 'store_guest_order']);

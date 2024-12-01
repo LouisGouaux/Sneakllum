@@ -1,99 +1,200 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useCallback } from "react";
 
-// Cart item type
 interface CartItem {
     id: number;
+    size?: { id: number; value: number } | null;
+    color?: { id: number; value: string } | null;
+    size_id?: number | null;
+    color_id?: number | null;
+    quantity: number | null;
     name: string;
     price: number;
-    size: number;
-    quantity: number;
     image: string;
-    color: string;
 }
 
-// Cart context type
+interface RawCartItem {
+    id: number;
+    size?: { id: number; value: number } | null;
+    color?: { id: number; value: string } | null;
+    quantity?: number | null;
+    name?: string;
+    price?: number;
+    image?: string;
+}
+
 interface CartContextType {
     cart: CartItem[];
-    addToCart: (item: CartItem) => void;
-    updateQuantity: (id: number, size: number, quantity: number) => void;
-    removeFromCart: (id: number, size: number) => void;
+    addToCart: (item: CartItem) => Promise<void>;
+    updateQuantity: (id: number, sizeId: number | null, colorId: number | null, quantity: number) => void;
+    removeFromCart: (id: number, sizeId: number | null, colorId: number | null, quantity?: number | null) => void;
     clearCart: () => void;
+    fetchCart: () => Promise<void>;
+    loading: boolean;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-// Cart Provider component
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [cart, setCart] = useState<CartItem[]>([]);
+    const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        const storedCart = localStorage.getItem("cart");
-        if (storedCart) {
-            setCart(JSON.parse(storedCart));
+    const mapRawCartData = (data: RawCartItem[]): CartItem[] =>
+    data.map((item): CartItem => ({
+        id: item.id,
+        size: item.size ?? null,
+        color: item.color ?? null,
+        size_id: item.size?.id ?? null,
+        color_id: item.color?.id ?? null,
+        quantity: item.quantity ?? null,
+        name: item.name ?? "Unknown",
+        price: item.price ?? 0,
+        image: item.image ?? "",
+    }));
+
+    const fetchCart = useCallback(async () => {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+
+        setLoading(true);
+        try {
+            const response = await fetch("https://5b8cmbmlsw.preview.infomaniak.website/api/basket", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                    Accept: "application/json",
+                },
+            });
+
+            if (response.ok) {
+                const data: RawCartItem[] = await response.json();
+                setCart(mapRawCartData(data));
+            }
+        } catch (error) {
+            console.error("Error fetching cart:", error);
+        } finally {
+            setLoading(false);
         }
     }, []);
 
-    useEffect(() => {
-        localStorage.setItem("cart", JSON.stringify(cart));
-    }, [cart]);
+    const addToCart = useCallback(
+        async (item: CartItem) => {
+            const token = localStorage.getItem("token");
+            if (!token) return;
 
-    const addToCart = (item: CartItem) => {
-        setCart((prevCart) => {
-            const existingItem = prevCart.find(
-                (i) => i.id === item.id && i.size === item.size
-            );
-            if (existingItem) {
-                return prevCart.map((i) =>
-                    i.id === item.id && i.size === item.size
-                        ? { ...i, quantity: i.quantity + item.quantity }
-                        : i
-                );
+            const payload = [
+                {
+                    product_id: item.id,
+                    size_id: item.size_id,
+                    color_id: item.color_id,
+                    quantity: item.quantity ?? 1,
+                },
+            ];
+
+            try {
+                const response = await fetch("https://5b8cmbmlsw.preview.infomaniak.website/api/basket", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                        Accept: "application/json",
+                    },
+                    body: JSON.stringify(payload),
+                });
+
+                if (response.ok) await fetchCart();
+            } catch (error) {
+                console.error("Error adding item to cart:", error);
             }
-            return [...prevCart, item];
-        });
-    };
+        },
+        [fetchCart]
+    );
 
-    const updateQuantity = (id: number, size: number, quantity: number) => {
-        setCart((prevCart) =>
-            prevCart.map((item) =>
-                item.id === id && item.size === size
-                    ? { ...item, quantity: Math.max(1, quantity) }
-                    : item
-            )
-        );
-    };
+    const updateQuantity = useCallback(
+        async (id: number, sizeId: number | null, colorId: number | null, quantity: number) => {
+            const token = localStorage.getItem("token");
+            if (!token || quantity < 1) return;
 
-    const removeFromCart = (id: number, size: number) => {
-        setCart((prevCart) => prevCart.filter((item) => item.id !== id || item.size !== size));
-    };
+            const payload = [{ product_id: id, size_id: sizeId, color_id: colorId, quantity }];
 
-    const clearCart = () => {
-        setCart([]);
-    };
+            try {
+                const response = await fetch("https://5b8cmbmlsw.preview.infomaniak.website/api/basket", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                        Accept: "application/json",
+                    },
+                    body: JSON.stringify(payload),
+                });
+
+                if (response.ok) {
+                    setCart((prevCart) =>
+                        prevCart.map((item) =>
+                            item.id === id && item.size?.id === sizeId && item.color?.id === colorId
+                                ? { ...item, quantity }
+                                : item
+                        )
+                    );
+                }
+            } catch (error) {
+                console.error("Error updating quantity:", error);
+            }
+        },
+        []
+    );
+
+    const removeFromCart = useCallback(
+        async (id: number, sizeId: number | null, colorId: number | null, quantity: number | null = 1) => {
+            const token = localStorage.getItem("token");
+            if (!token || !colorId) return;
+
+            const payload = [{ product_id: id, size_id: sizeId ?? null, color_id: colorId, quantity }];
+
+            try {
+                const response = await fetch("https://5b8cmbmlsw.preview.infomaniak.website/api/basket", {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify(payload),
+                });
+
+                if (response.ok) await fetchCart();
+            } catch (error) {
+                console.error("Error removing item:", error);
+            }
+        },
+        [fetchCart]
+    );
+
+    const clearCart = () => setCart([]);
 
     return (
         <CartContext.Provider
-            value={{ cart, addToCart, updateQuantity, removeFromCart, clearCart }}
+            value={{
+                cart,
+                addToCart,
+                updateQuantity,
+                removeFromCart,
+                clearCart,
+                fetchCart,
+                loading,
+            }}
         >
             {children}
         </CartContext.Provider>
     );
 };
 
-// Custom hook to use the cart
-
 export const useCart = () => {
-
     const context = useContext(CartContext);
-
     if (!context) {
-
-        throw new Error("useCart must be used within a CartProvider");
-
+        throw new Error("useCart must be used within a CartProvider.");
     }
-
     return context;
-
 };

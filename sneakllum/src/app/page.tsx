@@ -145,7 +145,7 @@ export default function HomePage() {
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-6">Explorez Nos Catégories</h2>
           <div className="flex justify-center space-x-6">
-            <Link href="/category/man">
+            <Link href="/search/man">
               <div className="w-60 h-80 relative group overflow-hidden rounded-lg shadow-lg bg-white">
                 <Image
                   src="https://images.pexels.com/photos/9604303/pexels-photo-9604303.jpeg"
@@ -159,7 +159,7 @@ export default function HomePage() {
                 </div>
               </div>
             </Link>
-            <Link href="/category/woman">
+            <Link href="/search/woman">
               <div className="w-60 h-80 relative group overflow-hidden rounded-lg shadow-lg bg-white">
                 <Image
                   src="https://images.pexels.com/photos/3686769/pexels-photo-3686769.jpeg"
@@ -173,7 +173,7 @@ export default function HomePage() {
                 </div>
               </div>
             </Link>
-            <Link href="/category/child">
+            <Link href="/search/child">
               <div className="w-60 h-80 relative group overflow-hidden rounded-lg shadow-lg bg-white">
                 <Image
                   src="https://images.pexels.com/photos/1620760/pexels-photo-1620760.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"

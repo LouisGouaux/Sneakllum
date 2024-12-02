@@ -9,7 +9,7 @@ use App\Models\Product;
 use App\Models\Variant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Validator;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
@@ -121,7 +121,7 @@ class ProductController extends Controller
     public function update_stock(Request $request)
     {
         $request->validate([
-            'file' => ['required', 'file', 'mimes:csv']
+            'file' => ['required', 'file', 'mimes:csv,txt']
         ]);
 
         $file = $request->file('file');

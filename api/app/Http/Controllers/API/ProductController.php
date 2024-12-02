@@ -81,7 +81,24 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'brand' => ['required', 'string'],
+            'name' => ['required', 'string'],
+            'gender' => ['required', 'string', 'exists:products,gender'],
+            'story' => ['required', 'string'],
+            'market_price' => ['required', 'integer', 'min:0'],
+            'release_date' => ['required', 'date'],
+            'image' => ['required', 'image'],
+            'sizes_id' => ['required', 'array'],
+            'sizes_id.*' => ['integer', 'exists:sizes,id'],
+            'colors' => ['required', 'array'],
+            'colors.*' => ['string']
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'product created'
+        ]);
     }
 
     /**

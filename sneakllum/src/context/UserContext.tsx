@@ -2,9 +2,9 @@
 import React, { createContext, useState, useContext, useEffect, ReactNode } from "react";
 
 interface UserContextType {
-  user: { name: string | null; email: string | null };
+  user: { name: string | null; email: string | null; isAdmin: boolean };
   token: string | null;
-  login: (userData: { name: string; email: string }, token: string) => void;
+  login: (userData: { name: string; email: string; isAdmin: boolean }, token: string) => void;
   logout: () => void;
 }
 
@@ -23,36 +23,44 @@ interface UserProviderProps {
 }
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<{ name: string | null; email: string | null }>({ name: null, email: null });
+  const [user, setUser] = useState<{ name: string | null; email: string | null; isAdmin: boolean }>({
+    name: null,
+    email: null,
+    isAdmin: false,
+  });
   const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("first_name");
+    const storedUser = localStorage.getItem("user");
     const storedToken = localStorage.getItem("token");
 
     if (storedUser && storedToken) {
-      setUser({ name: storedUser, email: "" });
+      const parsedUser = JSON.parse(storedUser);
+      setUser({ ...parsedUser });
       setToken(storedToken);
     }
   }, []);
 
-  const login = (userData: { name: string; email: string }, userToken: string) => {
+  const login = (
+      userData: { name: string; email: string; isAdmin: boolean },
+      userToken: string
+  ) => {
     setUser(userData);
     setToken(userToken);
-    localStorage.setItem("first_name", userData.name);
+    localStorage.setItem("user", JSON.stringify(userData));
     localStorage.setItem("token", userToken);
   };
 
   const logout = () => {
-    setUser({ name: null, email: null });
+    setUser({ name: null, email: null, isAdmin: false });
     setToken(null);
-    localStorage.removeItem("first_name");
+    localStorage.removeItem("user");
     localStorage.removeItem("token");
   };
 
   return (
-    <UserContext.Provider value={{ user, token, login, logout }}>
-      {children}
-    </UserContext.Provider>
+      <UserContext.Provider value={{ user, token, login, logout }}>
+        {children}
+      </UserContext.Provider>
   );
 };

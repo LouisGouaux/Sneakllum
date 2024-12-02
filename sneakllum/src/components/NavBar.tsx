@@ -116,6 +116,17 @@ export default function NavBar() {
                 Offres
               </Link>
             </li>
+            {/* Admin Link - Visible to logged-in users */}
+            {user && user.name && user.isAdmin && (
+                <li>
+                  <Link
+                      href="/admin"
+                      className="font-medium border-b-2 border-transparent hover:border-black hover:font-semibold hover:pb-1 transition-all"
+                  >
+                    Admin
+                  </Link>
+                </li>
+            )}
           </ul>
 
           <div className="flex items-center space-x-4 mr-4 relative">

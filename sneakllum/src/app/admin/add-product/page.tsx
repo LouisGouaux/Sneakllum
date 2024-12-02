@@ -17,7 +17,7 @@ export default function AddProduct() {
         gender: "",
         releaseDate: "",
         releaseYear: "",
-        image: "",
+        image: null as File | null, // File type for the image field
         description: "",
         marketPrice: "",
         price: "",
@@ -27,7 +27,7 @@ export default function AddProduct() {
         { color: "", size: "", stock: 0 },
     ]);
 
-    const handleProductChange = (field: string, value: string) => {
+    const handleProductChange = (field: string, value: unknown) => {
         setProduct((prev) => ({
             ...prev,
             [field]: value,
@@ -61,16 +61,28 @@ export default function AddProduct() {
             return;
         }
 
-        // Prepare product data for submission
-        const payload = { ...product, variants };
+        const formData = new FormData();
+        formData.append("name", product.name);
+        formData.append("brand", product.brand);
+        formData.append("gender", product.gender);
+        formData.append("releaseDate", product.releaseDate);
+        formData.append("releaseYear", product.releaseYear);
+        formData.append("description", product.description);
+        formData.append("marketPrice", product.marketPrice);
+        formData.append("price", product.price);
+
+        // Append image file
+        if (product.image) {
+            formData.append("image", product.image);
+        }
+
+        // Append variants as JSON
+        formData.append("variants", JSON.stringify(variants));
 
         try {
             const response = await fetch("/api/products", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(payload),
+                body: formData,
             });
 
             if (response.ok) {
@@ -145,15 +157,19 @@ export default function AddProduct() {
                         value={product.releaseYear}
                         onChange={(e) => handleProductChange("releaseYear", e.target.value)}
                         className="border p-2 rounded w-full"
+                        min={1900}
+                        max={new Date().getFullYear()}
                         required
                     />
                 </div>
                 <div>
-                    <label className="block font-semibold">Image URL</label>
+                    <label className="block font-semibold">Image</label>
                     <input
-                        type="url"
-                        value={product.image}
-                        onChange={(e) => handleProductChange("image", e.target.value)}
+                        type="file"
+                        onChange={(e) =>
+                            handleProductChange("image", e.target.files ? e.target.files[0] : null)
+                        }
+                        accept="image/*"
                         className="border p-2 rounded w-full"
                         required
                     />

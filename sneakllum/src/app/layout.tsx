@@ -3,7 +3,7 @@ import React from 'react';
 import { UserProvider } from '../context/UserContext';
 import NavBar from "../components/NavBar";
 import { CartProvider } from "@/context/CartContext";
-import { Suspense } from 'react'
+import { Suspense } from 'react';
 
 export const metadata = {
   title: "My E-commerce App",
@@ -12,18 +12,18 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-      <html lang="fr">
+    <html lang="fr">
       <body className="flex flex-col min-h-screen">
         <Suspense>
-            <UserProvider>
-              <CartProvider>
-                <NavBar />
-                <main className="flex-1">{children}</main>
-                <footer className="flex-initial bg-gray-800 text-white text-center p-4">
-                  © 2024 My E-commerce App
-                </footer>
-              </CartProvider>
-            </UserProvider>
+          <UserProvider>
+            <CartProvider>
+              <NavBar />
+              <main className="flex-1 w-full">{children}</main>
+              <footer className="bg-gray-800 text-white text-center p-4">
+                © 2024 My E-commerce App
+              </footer>
+            </CartProvider>
+          </UserProvider>
         </Suspense>
       </body>
     </html>

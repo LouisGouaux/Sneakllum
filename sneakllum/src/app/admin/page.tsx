@@ -25,9 +25,9 @@ export default function Admin({ title }: SearchPageProps) {
 
     // Filters State
     const [filters, setFilters] = useState({
-        size: "", // Example sizes: "20", "22", "24"
-        category: title, // 'men', 'women', 'unisex', 'youth', 'child', 'infant'
-        isNew: false, // true for new items
+        size: "",
+        category: title,
+        isNew: false,
     });
 
     const fetchProducts = useCallback(async () => {
@@ -68,7 +68,7 @@ export default function Admin({ title }: SearchPageProps) {
             ...prevFilters,
             [filterName]: value,
         }));
-        setCurrentPage(1); // Reset to first page on filter change
+        setCurrentPage(1);
     };
 
     const handleNextPage = () => {
@@ -79,13 +79,46 @@ export default function Admin({ title }: SearchPageProps) {
         if (currentPage > 1) setCurrentPage((prev) => prev - 1);
     };
 
+    const handleModifyStocks = () => {
+        // Logic for modifying stocks by CSV
+        console.log("Modify stocks by CSV clicked");
+    };
+
+    const handleExportStocks = () => {
+        // Logic for exporting stocks by CSV
+        console.log("Export stocks by CSV clicked");
+    };
+
+    const handleAddProduct = () => {
+        // Redirect to the add product page
+        router.push("/admin/add-product");
+    };
+
     return (
         <div className="w-screen p-6 flex flex-col">
             <h1 className="text-2xl font-bold mb-4">Manage Products</h1>
 
+            {/* Action Buttons */}
+            <div className="flex flex-wrap gap-4 mb-6">
+                <Button
+                    label="Modify stocks by CSV"
+                    variant="secondary"
+                    onClick={handleModifyStocks}
+                />
+                <Button
+                    label="Export stocks by CSV"
+                    variant="secondary"
+                    onClick={handleExportStocks}
+                />
+                <Button
+                    label="Add Product"
+                    variant="primary"
+                    onClick={handleAddProduct}
+                />
+            </div>
+
             {/* Filters Section */}
             <div className="mb-6 flex flex-wrap gap-4">
-                {/* Filter: Size */}
                 <select
                     value={filters.size}
                     onChange={(e) => handleFilterChange("size", e.target.value)}
@@ -107,7 +140,6 @@ export default function Admin({ title }: SearchPageProps) {
                     <option value="44">44</option>
                 </select>
 
-                {/* Filter: Category */}
                 <select
                     value={filters.category}
                     onChange={(e) => handleFilterChange("category", e.target.value)}
@@ -122,7 +154,6 @@ export default function Admin({ title }: SearchPageProps) {
                     <option value="infant">Infant</option>
                 </select>
 
-                {/* Filter: New Items */}
                 <label className="flex items-center space-x-2">
                     <input
                         type="checkbox"
@@ -152,13 +183,14 @@ export default function Admin({ title }: SearchPageProps) {
                             />
                             <h3 className="text-lg font-bold">{product.name}</h3>
                             <p className="text-gray-600">{product.brand}</p>
-                            <p className="text-blue-600 font-semibold">${product.price / 100}</p>
+                            <p className="text-blue-600 font-semibold">
+                                ${product.price / 100}
+                            </p>
                             <Button
                                 label="Edit product"
                                 variant="primary"
                                 className="mt-4 w-full"
-                                onClick={() => router.push(`/product/?id=`+ product.id
-                                )}
+                                onClick={() => router.push(`/product/?id=` + product.id)}
                             />
                         </div>
                     ))}
@@ -171,14 +203,16 @@ export default function Admin({ title }: SearchPageProps) {
                     onClick={handlePreviousPage}
                     disabled={currentPage === 1}
                     className={`px-4 py-2 border rounded-md ${
-                        currentPage === 1 ? "bg-gray-300 text-gray-500" : "bg-blue-600 text-white"
+                        currentPage === 1
+                            ? "bg-gray-300 text-gray-500"
+                            : "bg-blue-600 text-white"
                     }`}
                 >
                     Previous
                 </button>
                 <span className="font-semibold">
-          Page {currentPage} of {totalPages}
-        </span>
+                    Page {currentPage} of {totalPages}
+                </span>
                 <button
                     onClick={handleNextPage}
                     disabled={currentPage === totalPages}

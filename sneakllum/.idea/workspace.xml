@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="4eb65f6b-5240-4eca-8b0d-2e2252b0c980" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/search/layout.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/admin/add-product/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/admin/add-product/page.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,7 +47,7 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;configurable.group.tools&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\ivani\\Documents\\Epitech\\Gollum\\sneakllum\\node_modules\\typescript\\lib&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
@@ -75,6 +75,7 @@
       <workItem from="1731659834182" duration="91000" />
       <workItem from="1732264615120" duration="16600000" />
       <workItem from="1732869064924" duration="7745000" />
+      <workItem from="1733070434752" duration="7055000" />
     </task>
     <servers />
   </component>

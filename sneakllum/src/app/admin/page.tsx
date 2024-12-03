@@ -2,6 +2,8 @@
 import React, { useEffect, useState, useCallback } from "react";
 import Button from "../../components/Button";
 import { useRouter } from "next/navigation";
+import { useUser } from "../../context/UserContext";
+
 
 interface Product {
     id: number;
@@ -17,6 +19,8 @@ interface SearchPageProps {
 
 export default function Admin({ title }: SearchPageProps) {
     const router = useRouter();
+    const { user } = useUser();
+
     const [products, setProducts] = useState<Product[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
@@ -84,7 +88,9 @@ export default function Admin({ title }: SearchPageProps) {
 
     const handleCsvFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
+            console.log(e.target.files[0])
             setCsvFile(e.target.files[0]);
+            console.log(csvFile)
         }
     };
 
@@ -93,13 +99,19 @@ export default function Admin({ title }: SearchPageProps) {
             alert("Please select a CSV file before uploading.");
             return;
         }
+        console.log(csvFile)
 
         const formData = new FormData();
         formData.append("file", csvFile);
+        console.log(formData)
 
         try {
-            const response = await fetch("https://5b8cmbmlsw.preview.infomaniak.website/api/product/stock", {
+            const response = await fetch("https://5b8cmbmlsw.preview.infomaniak.website/api/products/stock", {
                 method: "PUT",
+                headers: {
+                    Accept: "multipart/form-data", // Add headers for multipart data and JSON
+                    Authorization: `Bearer ${user.name}`, // Add the Bearer token from the context
+                },
                 body: formData,
             });
 
@@ -110,7 +122,7 @@ export default function Admin({ title }: SearchPageProps) {
             alert("Stock updated successfully!");
             setCsvFile(null); // Reset file after successful upload
         } catch (err) {
-            console.error(err);
+            //console.error(err);
             alert("An error occurred while uploading the CSV file.");
         }
     };

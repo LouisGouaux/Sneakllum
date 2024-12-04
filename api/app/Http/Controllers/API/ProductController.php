@@ -92,12 +92,13 @@ class ProductController extends Controller
             'price' => ['required'],
             'release_date' => ['required', 'date'],
 'release_year' => ['required', 'integer'],
-//            'image' => ['required', 'image'],
+            'image' => ['required', 'file', 'mimes:jpg,png,jpeg'],
             'variants' => ['required', 'array'],
             'variants.*size_id' => ['required', 'integer', 'exists:sizes,id'],
             'variants.*color' => ['required', 'string']
         ]);
 
+        $file_path = $request->file('image')->store('images/products', 'public');
         $product = Product::create([
             'sku' => Str::random(12),
             'brand' => $data['brand'],
@@ -105,7 +106,7 @@ class ProductController extends Controller
             'gender' => $data['gender'],
             'release_date' => $data['release_date'],
             'release_year' => $data['release_year'],
-            'image' => 'test',
+            'image' => asset($file_path),
             'story' => $data['story'],
             'market_price' => $data['market_price'],
             'price' => $data['price']

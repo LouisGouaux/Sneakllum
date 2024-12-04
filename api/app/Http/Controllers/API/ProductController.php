@@ -5,11 +5,13 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductCollection;
 use App\Http\Resources\ProductResource;
+use App\Models\Color;
 use App\Models\Product;
 use App\Models\Variant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -87,18 +89,45 @@ class ProductController extends Controller
             'gender' => ['required', 'string', 'exists:products,gender'],
             'story' => ['required', 'string'],
             'market_price' => ['required', 'integer', 'min:0'],
+            'price' => ['required'],
             'release_date' => ['required', 'date'],
-            'image' => ['required', 'image'],
-            'sizes_id' => ['required', 'array'],
-            'sizes_id.*' => ['integer', 'exists:sizes,id'],
-            'colors' => ['required', 'array'],
-            'colors.*' => ['string']
+'release_year' => ['required', 'integer'],
+//            'image' => ['required', 'image'],
+            'variants' => ['required', 'array'],
+            'variants.*size_id' => ['required', 'integer', 'exists:sizes,id'],
+            'variants.*color' => ['required', 'string']
         ]);
 
+        $product = Product::create([
+            'sku' => Str::random(12),
+            'brand' => $data['brand'],
+            'name' => $data['name'],
+            'gender' => $data['gender'],
+            'release_date' => $data['release_date'],
+            'release_year' => $data['release_year'],
+            'image' => 'test',
+            'story' => $data['story'],
+            'market_price' => $data['market_price'],
+            'price' => $data['price']
+        ]);
+
+        foreach ($data['variants'] as $variant) {
+            $color = new Color();
+            $color->color = $variant['color'];
+            $color->save();
+            $product_variant = new Variant();
+            $product_variant->product_id = $product->id;
+            $product_variant->size_id = $variant['size_id'];
+            $product_variant->color_id = $color->id;
+            $product_variant->stock = $variant['stock'];
+            $product_variant->save();
+
+        }
         return response()->json([
             'success' => true,
+            'data' => new ProductResource($product),
             'message' => 'product created'
-        ]);
+        ], 201);
     }
 
     /**

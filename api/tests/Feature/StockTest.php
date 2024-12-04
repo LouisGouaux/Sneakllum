@@ -31,7 +31,7 @@ class UpdateStockTest extends TestCase
             true
         );
 
-        $response = $this->actingAs($admin)->putJson('/api/products/stock', [
+        $response = $this->actingAs($admin)->postJson('/api/products/stock', [
             'file' => $file
         ]);
 
@@ -72,7 +72,7 @@ class UpdateStockTest extends TestCase
             true
         );
 
-        $response = $this->actingAs($admin)->putJson('/api/products/stock', [
+        $response = $this->actingAs($admin)->postJson('/api/products/stock', [
             'file' => $file
         ]);
 
@@ -92,7 +92,7 @@ class UpdateStockTest extends TestCase
     {
         $admin = User::factory()->create(['is_admin' => true]);
 
-        $response = $this->actingAs($admin)->putJson('/api/products/stock', []);
+        $response = $this->actingAs($admin)->postJson('/api/products/stock', []);
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['file']);
@@ -118,7 +118,7 @@ class UpdateStockTest extends TestCase
             true
         );
 
-        $response = $this->actingAs($user)->putJson('/api/products/stock', [
+        $response = $this->actingAs($user)->postJson('/api/products/stock', [
             'file' => $file
         ]);
 

@@ -106,6 +106,8 @@ export default function Admin({ title }: SearchPageProps) {
         console.log(formData)
 
         try {
+            console.log(formData)
+
             const response = await fetch("https://5b8cmbmlsw.preview.infomaniak.website/api/products/stock", {
                 method: "PUT",
                 headers: {
@@ -114,6 +116,8 @@ export default function Admin({ title }: SearchPageProps) {
                 },
                 body: formData,
             });
+            console.log(formData)
+
 
             if (!response.ok) {
                 throw new Error("Failed to upload stock CSV.");

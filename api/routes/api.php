@@ -19,5 +19,5 @@ Route::get('products/{id}', [\App\Http\Controllers\API\ProductController::class,
 Route::get('products/{id}/recommendations', [\App\Http\Controllers\API\ProductController::class, 'recommendation']);
 Route::get('products/{id}/check', [\App\Http\Controllers\API\ProductController::class, 'check_product_stock']);
 Route::get('products', [\App\Http\Controllers\API\ProductController::class, 'index']);
-Route::post('api/products', [\App\Http\Controllers\API\ProductController::class, 'store']);
+Route::post('products', [\App\Http\Controllers\API\ProductController::class, 'store']);
 Route::get('brands', [\App\Http\Controllers\API\FilterController::class, 'brand_index']);

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Storage;
@@ -41,5 +42,22 @@ class ProductTest extends TestCase
 
         $response->assertStatus(201);
         $response->dump();
+    }
+
+    public function test_user_can_show_product() {
+        $user = User::factory()->create();
+        $response = $this->actingAs($user)->getJson('api/products/42');
+
+        $response->assertStatus(200);
+    }
+
+    public function test_admin_can_show_variants() {
+        $user = User::factory()->create([
+            'is_admin' => true
+        ]);
+
+        $response = $this->actingAs($user)->getJson('api/products/42');
+
+        $response->assertStatus(200);
     }
 }

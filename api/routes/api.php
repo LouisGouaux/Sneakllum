@@ -21,3 +21,4 @@ Route::get('products/{id}/check', [\App\Http\Controllers\API\ProductController::
 Route::get('products', [\App\Http\Controllers\API\ProductController::class, 'index']);
 Route::post('products', [\App\Http\Controllers\API\ProductController::class, 'store'])->middleware(\App\Http\Middleware\EnsureUserIsAdmin::class);
 Route::get('brands', [\App\Http\Controllers\API\FilterController::class, 'brand_index']);
+Route::get('sizes', [\App\Http\Controllers\API\FilterController::class, 'size_index']);

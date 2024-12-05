@@ -20,7 +20,7 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $request->validate([
+        $data = $request->validate([
             'sort' => ['string', 'max:5'],
             'brand' => ['string'],
             'gender' => ['string', 'max:10'],
@@ -29,23 +29,28 @@ class ProductController extends Controller
         if ($request->sort === 'new') {
             $products = $this->new_product();
         } else {
-            $query = Product::query();
-            if ($request->has('brand')) {
-                $query->where('brand', $request->brand);
-            }
-            if ($request->has('gender')) {
-                $query->where('gender', $request->gender);
-            }
-            if ($request->has('size')) {
-                $size = $request->size;
-                $query->whereHas('sizes', function ($q) use ($size) {
-                    $q->where('size', $size);
-                });
-            }
-
+            $query = $this->filter_products($data);
             $products = $query->paginate(20);
         }
         return new ProductCollection($products);
+    }
+
+    private function filter_products($data)
+    {
+        $query = Product::query();
+        if (array_key_exists('brand', $data)) {
+            $query->where('brand', $data['brand']);
+        }
+        if (array_key_exists('gender', $data)) {
+            $query->where('gender', $data['gender']);
+        }
+        if (array_key_exists('size', $data)) {
+            $size = $data['size'];
+            $query->whereHas('sizes', function ($q) use ($size) {
+                $q->where('size', $size);
+            });
+        }
+        return $query;
     }
 
     private function new_product()
@@ -91,7 +96,7 @@ class ProductController extends Controller
             'market_price' => ['required', 'integer', 'min:0'],
             'price' => ['required'],
             'release_date' => ['required', 'date'],
-'release_year' => ['required', 'integer'],
+            'release_year' => ['required', 'integer'],
             'image' => ['required', 'file', 'mimes:jpg,png,jpeg'],
             'variants' => ['required', 'array'],
             'variants.*size_id' => ['required', 'integer', 'exists:sizes,id'],
@@ -234,12 +239,13 @@ class ProductController extends Controller
     {
         return isset($data[0]) && strtolower($data[0]) == 'variant_id';
     }
-/**
- * Remove the specified resource from storage.
- */
-public
-function destroy(Product $product)
-{
-    //
-}
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public
+    function destroy(Product $product)
+    {
+        //
+    }
 }

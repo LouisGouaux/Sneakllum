@@ -98,7 +98,7 @@ class ProductController extends Controller
             'release_date' => ['required', 'date'],
             'release_year' => ['required', 'integer'],
             'image' => ['required', 'file', 'mimes:jpg,png,jpeg'],
-            'variants' => ['required', 'array'],
+            'variants' => ['required'],
             'variants.*size_id' => ['required', 'integer', 'exists:sizes,id'],
             'variants.*color' => ['required', 'string']
         ]);

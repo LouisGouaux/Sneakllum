@@ -16,7 +16,10 @@ class ProductTest extends TestCase
         Storage::fake('test');
         $file = UploadedFile::fake()->image('product.png');
 
-        $response = $this->postJson('api/products', [
+        $user = User::factory()->create([
+            'is_admin' => true
+        ]);
+        $response = $this->actingAs($user)->postJson('api/products', [
             'name' => Str::random(14),
             'brand' => 'Test',
             'gender' => 'infant',

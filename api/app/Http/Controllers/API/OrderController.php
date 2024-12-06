@@ -61,7 +61,7 @@ class OrderController extends Controller
             'shipping_address' => ['required', 'string'],
         ]);
         $order_data['order_number'] = Str::random(6);
-        $order_data['billing_address'] = $data['shipping_address'];
+        $order_data['billing_address'] = $order_data['shipping_address'];
         $order_data['total_amount'] = $this->calculate_amount($basket);
         $order = Order::create($order_data);
         foreach ($basket as $item) {
@@ -78,7 +78,8 @@ class OrderController extends Controller
         ], 201);
     }
 
-    public function get_user_orders(Request $request) {
+    public function get_user_orders(Request $request)
+    {
         $orders = $request->user()->orders;
 
         return response()->json([
@@ -87,6 +88,20 @@ class OrderController extends Controller
             'message' => 'orders retrived successfully'
         ]);
     }
+
+    public function get_order_by_number(Request $request)
+    {
+        $data = $request->validate([
+            'order_number' => ['required', 'string'],
+            'user_last_name' => ['required', 'string']
+        ]);
+        $order = Order::where('order_number', $data['order_id'])
+            ->where('order_last_name', $data['order_last_name'])
+            ->first();
+
+        return response(new OrderResource($order));
+    }
+
     private function calculate_amount($basket)
     {
         $total_amount = 0;

@@ -27,12 +27,8 @@ class ProductController extends Controller
             'gender' => ['string', 'max:10'],
             'size' => ['integer', 'min:15', 'max:49']
         ]);
-        if ($request->sort === 'new') {
-            $products = $this->new_product();
-        } else {
-            $query = $this->filter_products($data);
-            $products = $query->paginate(20);
-        }
+        $query = $this->filter_products($data);
+        $products = $query->paginate(20);
         return new ProductCollection($products);
     }
 
@@ -51,14 +47,12 @@ class ProductController extends Controller
                 $q->where('size', $size);
             });
         }
+        if (array_key_exists('sort', $data) && $data['sort'] == 'new') {
+        $query->orderBy('release_date', 'desc');
+    }
         return $query;
     }
 
-    private function new_product()
-    {
-        $products = Product::orderBy('release_date', 'desc')->paginate(20);
-        return $products;
-    }
 
     public function check_product_stock($id, Request $request)
     {

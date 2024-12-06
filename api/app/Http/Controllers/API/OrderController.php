@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Variant;
@@ -72,9 +73,7 @@ class OrderController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => [
-                'order_number' => $order->order_number
-            ],
+            'data' => new OrderResource($order),
             'message' => 'Order created successfully'
         ], 201);
     }

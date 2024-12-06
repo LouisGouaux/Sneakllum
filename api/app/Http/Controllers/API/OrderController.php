@@ -78,6 +78,15 @@ class OrderController extends Controller
         ], 201);
     }
 
+    public function get_user_orders(Request $request) {
+        $orders = $request->user()->orders;
+
+        response()->json([
+            'success' => true,
+            'data' => OrderResource::collection($orders),
+            'message' => 'orders retrived successfully'
+        ]);
+    }
     private function calculate_amount($basket)
     {
         $total_amount = 0;

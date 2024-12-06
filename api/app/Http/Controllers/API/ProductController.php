@@ -189,7 +189,7 @@ class ProductController extends Controller
         if (!isset($data['story'])) {
             unset($data['story']);
         }
-        $product['market_price'] = $data['market_price'] * 100;
+        $data['market_price'] = $data['market_price'] * 100;
         $data['price'] = $data['price'] * 100;
         $product = Product::find($id);
         $product->update($data);

@@ -95,7 +95,7 @@ class OrderController extends Controller
             'order_number' => ['required', 'string'],
             'user_last_name' => ['required', 'string']
         ]);
-        $order = Order::where('order_number', $data['order_id'])
+        $order = Order::where('order_number', $data['order_number'])
             ->where('order_last_name', $data['order_last_name'])
             ->first();
 

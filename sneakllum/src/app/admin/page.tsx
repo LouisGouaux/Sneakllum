@@ -4,7 +4,6 @@ import Button from "../../components/Button";
 import { useRouter } from "next/navigation";
 import { useUser } from "../../context/UserContext";
 
-
 interface Product {
     id: number;
     brand: string;
@@ -17,10 +16,9 @@ interface SearchPageProps {
     title: string;
 }
 
-export default function Admin({ title }: SearchPageProps) {
+const Admin: React.FC<SearchPageProps> = ({ title }) => {
     const router = useRouter();
     const { token } = useUser();
-
 
     const [products, setProducts] = useState<Product[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -89,9 +87,9 @@ export default function Admin({ title }: SearchPageProps) {
 
     const handleCsvFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
-            console.log(e.target.files[0])
+            console.log(e.target.files[0]);
             setCsvFile(e.target.files[0]);
-            console.log(csvFile)
+            console.log(csvFile);
         }
     };
 
@@ -100,18 +98,16 @@ export default function Admin({ title }: SearchPageProps) {
             alert("Please select a CSV file before uploading.");
             return;
         }
-        console.log(csvFile)
+        console.log(csvFile);
 
         const formData = new FormData();
         formData.append("file", csvFile, "stockUpdate.csv");
-        console.log(formData)
+        console.log(formData);
 
         try {
-            console.log(formData)
-            console.log(formData.get("file"))
-            console.log(token)
-
-            console.log(csvFile)
+            console.log(formData);
+            console.log(formData.get("file"));
+            console.log(token);
 
             const response = await fetch("https://5b8cmbmlsw.preview.infomaniak.website/api/products/stock", {
                 method: "POST",
@@ -120,45 +116,32 @@ export default function Admin({ title }: SearchPageProps) {
                     Accept: "application/json",
                 },
                 body: formData,
-                /*body: JSON.stringify({
-                    'file': csvFile,
-                }),*/
             });
-            //console.log(formData.getAll())
 
             if (!response.ok) {
-                console.log(formData)
-                console.log(response)
                 const errorData = await response.json();
-                console.log(errorData)
+                console.log(errorData);
                 console.error("Error response:", errorData);
                 throw new Error("Failed to upload stock CSV.");
             }
-            console.log(formData)
-            console.log(response)
             alert("Stock updated successfully!");
             setCsvFile(null); // Reset file after successful upload
         } catch (err) {
             console.log(err);
-            //alert("An error occurred while uploading the CSV file.");
         }
     };
 
     const handleExportStocks = () => {
-        // Logic for exporting stocks by CSV
         console.log("Export stocks by CSV clicked");
     };
 
     const handleAddProduct = () => {
-        // Redirect to the add product page
         router.push("/admin/add-product");
     };
 
     return (
         <div className="w-screen p-6 flex flex-col">
             <h1 className="text-2xl font-bold mb-4">Manage Products</h1>
-
-            {/* Action Buttons */}
             <div className="flex flex-wrap gap-4 mb-6">
                 <div>
                     <Button
@@ -307,3 +290,5 @@ export default function Admin({ title }: SearchPageProps) {
         </div>
     );
 }
+
+export default Admin;

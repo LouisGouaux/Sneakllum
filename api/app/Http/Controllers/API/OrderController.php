@@ -84,7 +84,7 @@ class OrderController extends Controller
         foreach ($basket as $item) {
             $product = Product::find($item['product_id']);
             $price = $product->price;
-            $quantity = $item['quantity'];
+            $quantity = $item->pivot->quantity;
             $total_amount += $price * $quantity;
         }
         return $total_amount;

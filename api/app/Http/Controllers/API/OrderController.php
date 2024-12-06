@@ -37,9 +37,7 @@ class OrderController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => [
-                'order_number' => $order->order_number
-            ],
+            'data' => new OrderResource($order),
             'message' => 'Order created successfully'
         ], 201);
     }

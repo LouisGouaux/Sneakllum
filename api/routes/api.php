@@ -13,6 +13,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('products/{id}', [\App\Http\Controllers\API\ProductController::class, 'update']);
     Route::post('products', [\App\Http\Controllers\API\ProductController::class, 'store'])->middleware(\App\Http\Middleware\EnsureUserIsAdmin::class);
     Route::post('user/orders', [\App\Http\Controllers\API\OrderController::class, 'store_user_checkout']);
+    Route::get('user/orders');
 
 
 });

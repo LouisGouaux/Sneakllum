@@ -30,7 +30,7 @@ class OrderResource extends JsonResource
         foreach ($variants as $variant) {
             $product = [
                 'name' => $variant->product->name,
-                'price' => $variant->product->price /100,
+                'price' => $variant->product->price / 100,
                 'image' => $variant->product->image,
                 'quantity' => $variant->pivot->quantity
             ];

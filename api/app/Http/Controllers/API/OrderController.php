@@ -47,10 +47,10 @@ class OrderController extends Controller
     public function store_guest_order(Request $request)
     {
         $basket = $request->validate([
-            '*.product_id' => ['required', 'integer', 'exists:products,id'],
-            '*.size_id' => ['required', 'integer', 'exists:sizes,id'],
-            '*.color_id' => ['required', 'integer', 'exists:colors,id'],
-            '*.quantity' => ['required', 'integer', 'min:1']
+            'basket.*product_id' => ['required', 'integer', 'exists:products,id'],
+            'basket.*size_id' => ['required', 'integer', 'exists:sizes,id'],
+            'basket.*color_id' => ['required', 'integer', 'exists:colors,id'],
+            'basket.*quantity' => ['required', 'integer', 'min:1']
         ]);
 
         $order_data = $request->validate([
@@ -58,7 +58,7 @@ class OrderController extends Controller
             'user_last_name' => ['required', 'string'],
             'user_email' => ['required', 'email'],
             'user_phone' => ['required', 'string'],
-            'shipping_address' => ['required', 'string']
+            'shipping_address' => ['required', 'string'],
         ]);
         $order_data['order_number'] = Str::random(6);
         $order_data['billing_address'] = $data['shipping_address'];

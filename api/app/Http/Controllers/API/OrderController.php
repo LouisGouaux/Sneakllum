@@ -12,7 +12,8 @@ use Illuminate\Support\Str;
 class OrderController extends Controller
 {
 
-    public function store_user_checkout(Request$request) {
+    public function store_user_checkout(Request $request)
+    {
         $data = $request->validate([
             'user_first_name' => ['required', 'string'],
             'user_last_name' => ['required', 'string'],
@@ -28,7 +29,9 @@ class OrderController extends Controller
         $order = Order::create($data);
         foreach ($basket as $item) {
             $variant = Variant::where('product_id', $item['product_id'])->where('size_id', $item['size_id'])->where('color_id', $item['color_id'])->first();
-            $order->variants()->attach($variant->id);
+            $order->variants()->attach($variant->id, [
+                'quantity' => $item['quantity']
+            ]);
         }
 
         return response()->json([
@@ -39,6 +42,7 @@ class OrderController extends Controller
             'message' => 'Order created successfully'
         ], 201);
     }
+
     public function store_guest_order(Request $request)
     {
         $basket = $request->validate([

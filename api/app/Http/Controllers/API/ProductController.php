@@ -211,7 +211,7 @@ class ProductController extends Controller
         $product = Product::find($id);
         $stored_image_path = Str::after($product->image, env('APP_URL') . '/storage/');
         Storage::disk('public')->delete($stored_image_path);
-        $file_path = $request->file()->store('images/products', 'public');
+        $file_path = $request->file('image')->store('images/products', 'public');
         $product->image = env('APP_URL') . '/storage/' . $file_path;
         $product->save();
 

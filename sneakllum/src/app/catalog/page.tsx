@@ -1,7 +1,9 @@
 "use client";
 import React, { useEffect, useState, useCallback } from "react";
 import Button from "../../components/Button";
-import { useRouter } from "next/navigation";
+import {useRouter} from "next/navigation";
+
+import { usePathname } from 'next/navigation'
 
 interface Product {
   id: number;
@@ -11,25 +13,23 @@ interface Product {
   image: string;
 }
 
-interface SearchPageProps {
-  title: string;
-}
 
-export default function SearchPage({ title }: SearchPageProps) {
+export default function SearchPage() {
   const router = useRouter();
-
+  const pathname = usePathname()
+    console.log(pathname)
   const [products, setProducts] = useState<Product[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [totalPages, setTotalPages] = useState<number>(1);
-
   // Filters State
   const [filters, setFilters] = useState({
     size: "", // Example sizes: "20", "22", "24"
-    category: title, // 'men', 'women', 'unisex', 'youth', 'child', 'infant'
+    category: "", // 'men', 'women', 'unisex', 'youth', 'child', 'infant'
     isNew: false, // true for new items
   });
+
 
   const fetchProducts = useCallback(async () => {
     setIsLoading(true);
@@ -62,6 +62,31 @@ export default function SearchPage({ title }: SearchPageProps) {
 
   useEffect(() => {
     fetchProducts();
+    /*  if (pathname === "/search/woman"){
+          setFilters({
+              size: "", // Example sizes: "20", "22", "24"
+              category: "women", // 'men', 'women', 'unisex', 'youth', 'child', 'infant'
+              isNew: false,
+          })
+      } else if(pathname === "/search/man"){
+          setFilters({
+              size: "", // Example sizes: "20", "22", "24"
+              category: "men", // 'men', 'women', 'unisex', 'youth', 'child', 'infant'
+              isNew: false,
+          })
+      }else if(pathname === "/search/child"){
+          setFilters({
+              size: "", // Example sizes: "20", "22", "24"
+              category: "child", // 'men', 'women', 'unisex', 'youth', 'child', 'infant'
+              isNew: false,
+          })
+      }else if(pathname === "/search/new"){
+          setFilters({
+              size: "", // Example sizes: "20", "22", "24"
+              category: "", // 'men', 'women', 'unisex', 'youth', 'child', 'infant'
+              isNew: true,
+          })
+      }*/
   }, [fetchProducts]);
 
   const handleFilterChange = (filterName: string, value: unknown) => {

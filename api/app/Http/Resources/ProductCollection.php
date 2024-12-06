@@ -20,7 +20,7 @@ class ProductCollection extends ResourceCollection
                     'id' => $product->id,
                     'brand' => $product->brand,
                     'name' => $product->name,
-                    'price' => $product->price/100,
+                    'price' => $product->price / 100,
                     'image' => $product->image,
                 ];
             }),

@@ -81,7 +81,7 @@ class OrderController extends Controller
     public function get_user_orders(Request $request) {
         $orders = $request->user()->orders;
 
-        response()->json([
+        return response()->json([
             'success' => true,
             'data' => OrderResource::collection($orders),
             'message' => 'orders retrived successfully'

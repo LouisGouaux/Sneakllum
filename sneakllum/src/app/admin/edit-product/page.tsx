@@ -53,6 +53,13 @@ export default function EditProduct() {
     const [sizes, setSizes] = useState<Size[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false); // For handling modal visibility
+    const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+    const [isEditVariantModalOpen, setIsEditVariantModalOpen] = useState(false);
+    const [isRemoveVariantModalOpen, setIsRemoveVariantModalOpen] = useState(false);
+    const [showAddModal, setShowAddModal] = useState(false);
+
+    const [variantToEdit, setVariantToEdit] = useState<Variant | null>(null);
+    const [variantToRemove, setVariantToRemove] = useState<Variant | null>(null);
     const [productEditData, setProductEditData] = useState<EditProduct>({
         name: "",
         brand:"",
@@ -161,6 +168,38 @@ export default function EditProduct() {
         });
         setIsModalOpen(false); // Close the modal without saving
     };
+    const handleImageModalCancel = () => {
+        setIsImageModalOpen(false);
+    };
+    const handleEditVariant = (variant: Variant) => {
+        setVariantToEdit(variant);
+        setIsEditVariantModalOpen(true);
+    };
+
+    const handleRemoveVariant = (variant: Variant) => {
+        setVariantToRemove(variant);
+        setIsRemoveVariantModalOpen(true);
+    };
+
+    const handleCancelEditVariant = () => {
+        setVariantToEdit(null);
+        setIsEditVariantModalOpen(false);
+    };
+
+    const handleCancelRemoveVariant = () => {
+        setVariantToRemove(null);
+        setIsRemoveVariantModalOpen(false);
+    };
+
+    const handleCancelAdd = () => {
+        setShowAddModal(false); // Close the modal and return to edit product page
+    };
+
+    const handleConfirmAdd = () => {
+        console.log("New variant added"); // Placeholder for adding variant logic
+        setShowAddModal(false);
+    };
+
 
     if (isLoading) {
         return <div>Loading...</div>;
@@ -263,7 +302,18 @@ export default function EditProduct() {
 
                 <div>
                     <label className="block font-semibold">Image</label>
-                    <img src={product.image} alt="Product" className="max-w-full h-auto rounded-md" />
+                    <img
+                        src={product.image}
+                        alt="Product"
+                        className="max-w-full h-auto rounded-md"
+                    />
+                    <button
+                        type="button"
+                        onClick={() => setIsImageModalOpen(true)}
+                        className="bg-blue-500 text-white px-4 py-2 rounded mt-2"
+                    >
+                        Edit Image
+                    </button>
                 </div>
 
                 <div>
@@ -271,10 +321,10 @@ export default function EditProduct() {
                     {variants.map((variant, index) => (
                         <div
                             key={index}
-                            className="flex flex-wrap gap-4 items-center mb-4 border p-4 rounded-md"
+                            className="flex flex-col gap-4 border p-4 rounded-md mb-4"
                         >
-                            {/* Variant ID (Read-only) */}
-                            <div className="w-full">
+                            {/* Variant ID */}
+                            <div>
                                 <label className="block font-semibold">Variant ID</label>
                                 <input
                                     type="text"
@@ -284,7 +334,8 @@ export default function EditProduct() {
                                 />
                             </div>
 
-                            <div className="flex-1">
+                            {/* Color */}
+                            <div>
                                 <label className="block font-semibold">Color</label>
                                 <input
                                     type="text"
@@ -293,7 +344,9 @@ export default function EditProduct() {
                                     className="border p-2 rounded w-full bg-gray-100"
                                 />
                             </div>
-                            <div className="flex-1">
+
+                            {/* Size */}
+                            <div>
                                 <label className="block font-semibold">Size</label>
                                 <input
                                     type="text"
@@ -302,7 +355,9 @@ export default function EditProduct() {
                                     className="border p-2 rounded w-full bg-gray-100"
                                 />
                             </div>
-                            <div className="flex-1">
+
+                            {/* Stock */}
+                            <div>
                                 <label className="block font-semibold">Stock</label>
                                 <input
                                     type="text"
@@ -311,8 +366,36 @@ export default function EditProduct() {
                                     className="border p-2 rounded w-full bg-gray-100"
                                 />
                             </div>
+
+                            {/* Buttons */}
+                            <div className="flex justify-end gap-2 mt-4">
+                                <button
+                                    type="button"
+                                    className="bg-green-500 text-white px-4 py-2 rounded"
+                                    onClick={() => handleEditVariant(variant)}
+                                >
+                                    Edit
+                                </button>
+                                <button
+                                    type="button"
+                                    className="bg-red-500 text-white px-4 py-2 rounded"
+                                    onClick={() => handleRemoveVariant(variant)}
+                                >
+                                    Remove
+                                </button>
+                            </div>
                         </div>
                     ))}
+                    {/* Add New Variant Button */}
+                    <div className="mt-6">
+                        <button
+                            type="button"
+                            className="bg-blue-500 text-white px-6 py-2 rounded"
+                            onClick={() => setShowAddModal(true)}
+                        >
+                            Add New Variant
+                        </button>
+                    </div>
                 </div>
 
                 <div>
@@ -442,8 +525,163 @@ export default function EditProduct() {
                     </div>
                 </div>
             )}
+            {/* Image Edit Modal */}
+            {isImageModalOpen && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+                    <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+                        <h2 className="text-xl font-semibold mb-4">Edit Product Image</h2>
 
+                        <div className="mb-4">
+                            <label className="block font-semibold mb-2">Current Image</label>
+                            <img
+                                src={product.image}
+                                alt="Current Product"
+                                className="max-w-full h-auto rounded-md"
+                            />
+                        </div>
 
+                        <div className="mb-4">
+                            <button
+                                type="button"
+                                className="bg-gray-300 text-black px-4 py-2 rounded w-full"
+                            >
+                                Select Image
+                            </button>
+                        </div>
+
+                        <div className="mt-4 flex justify-between">
+                            <button
+                                type="button"
+                                onClick={handleImageModalCancel}
+                                className="bg-gray-500 text-white px-4 py-2 rounded"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="button"
+                                className="bg-blue-500 text-white px-4 py-2 rounded"
+                            >
+                                Confirm
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {/* Edit Variant Modal */}
+            {isEditVariantModalOpen && variantToEdit && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+                    <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+                        <h2 className="text-xl font-semibold mb-4">Edit Variant</h2>
+                        <div>
+                            <label>Color</label>
+                            <input
+                                type="text"
+                                value={variantToEdit.color.value}
+                                className="border p-2 rounded w-full"
+                                readOnly
+                            />
+                        </div>
+                        <div>
+                            <label>Size</label>
+                            <input
+                                type="text"
+                                value={variantToEdit.size.value}
+                                className="border p-2 rounded w-full"
+                                readOnly
+                            />
+                        </div>
+                        <div>
+                            <label>Stock</label>
+                            <input
+                                type="number"
+                                value={variantToEdit.stock}
+                                className="border p-2 rounded w-full"
+                                readOnly
+                            />
+                        </div>
+                        <div className="mt-4 flex justify-between">
+                            <button
+                                className="bg-gray-500 text-white px-4 py-2 rounded"
+                                onClick={handleCancelEditVariant}
+                            >
+                                Cancel
+                            </button>
+                            <button className="bg-blue-500 text-white px-4 py-2 rounded">
+                                Confirm
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Remove Variant Modal */}
+            {isRemoveVariantModalOpen && variantToRemove && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+                    <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+                        <h2 className="text-xl font-semibold mb-4">
+                            Are you sure you want to delete this variant?
+                        </h2>
+                        <div className="mt-4 flex justify-between">
+                            <button
+                                className="bg-gray-500 text-white px-4 py-2 rounded"
+                                onClick={handleCancelRemoveVariant}
+                            >
+                                Cancel
+                            </button>
+                            <button className="bg-red-500 text-white px-4 py-2 rounded">
+                                Confirm
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {showAddModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+                    <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+                        <h2 className="text-xl font-semibold mb-4">Add New Variant</h2>
+                        <div className="mb-4">
+                            <label className="block font-semibold">Color</label>
+                            <input
+                                type="text"
+                                placeholder="Enter color"
+                                className="border p-2 rounded w-full"
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label className="block font-semibold">Size</label>
+                            <input
+                                type="number"
+                                placeholder="Enter size"
+                                className="border p-2 rounded w-full"
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label className="block font-semibold">Stock</label>
+                            <input
+                                type="number"
+                                placeholder="Enter stock"
+                                className="border p-2 rounded w-full"
+                            />
+                        </div>
+                        <div className="mt-4 flex justify-between">
+                            <button
+                                type="button"
+                                className="bg-gray-500 text-white px-4 py-2 rounded"
+                                onClick={handleCancelAdd}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="button"
+                                className="bg-blue-500 text-white px-4 py-2 rounded"
+                                onClick={handleConfirmAdd}
+                            >
+                                Confirm
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

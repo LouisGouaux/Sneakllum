@@ -168,7 +168,24 @@ class ProductController extends Controller
     public
     function update(Request $request, Product $product)
     {
-        //
+        $data = $request->validate([
+            'brand' => ['required', 'string'],
+            'name' => ['required', 'string'],
+            'gender' => ['required', 'string', 'exists:products,gender'],
+            'story' => ['required', 'string'],
+            'market_price' => ['required', 'integer', 'min:0'],
+            'price' => ['required'],
+            'release_date' => ['required', 'date'],
+            'release_year' => ['required', 'integer'],
+        ]);
+
+        $product->update($data);
+
+        return response()->json([
+            'success' => true,
+            'data' => new ProductResource($product),
+            'message' => 'product updated successfully'
+        ], 200);
     }
 
     public function update_stock(Request $request)

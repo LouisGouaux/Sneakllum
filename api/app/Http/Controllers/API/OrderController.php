@@ -39,6 +39,7 @@ class OrderController extends Controller
         return response()->json([
             'success' => true,
             'data' => new OrderResource($order),
+            'basket' => $basket,
             'message' => 'Order created successfully'
         ], 201);
     }

@@ -32,7 +32,7 @@ class OrderResource extends JsonResource
                 'name' => $variant->product->name,
                 'price' => $variant->product->price /100,
                 'image' => $variant->product->image,
-                'quantity' => $variant->quantity
+                'quantity' => $variant->pivot->quantity
             ];
             array_push($products, $product);
         }

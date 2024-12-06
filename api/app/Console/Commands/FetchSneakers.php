@@ -66,6 +66,9 @@ class FetchSneakers extends Command
         if (empty($attributes['image']['original'] ?? null)) {
             return null;
         }
+        if ($attributes['image']['original'] == "true") {
+            return null;
+        }
 
         if (($attributes['retailPrice'] ?? 0) == 0 && ($attributes['estimatedMarketValue'] ?? 0) == 0) {
             return null;

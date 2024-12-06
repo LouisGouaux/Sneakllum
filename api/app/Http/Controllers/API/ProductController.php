@@ -176,8 +176,8 @@ class ProductController extends Controller
             'story' => ['string', 'nullable'],
             'market_price' => ['required', 'integer', 'min:0'],
             'price' => ['required'],
-            'release_date' => ['date'],
-            'release_year' => ['integer'],
+            'release_date' => ['date', 'nullable'],
+            'release_year' => ['integer', 'nullable'],
         ]);
 
         $product->update($data);

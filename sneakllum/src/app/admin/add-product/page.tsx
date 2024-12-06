@@ -88,9 +88,9 @@ export default function AddProduct() {
 
         // Append variants as JSON
         formData.append("variants", JSON.stringify(variants));
-        for (var value of formData.values()) {
+        /*for (var value of formData.values()) {
             console.log(value);
-        }
+        }*/
         try {
             const response = await fetch("https://5b8cmbmlsw.preview.infomaniak.website/api/products", {
                 method: "POST",

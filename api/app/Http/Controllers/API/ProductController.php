@@ -204,9 +204,9 @@ class ProductController extends Controller
 
     public function update_image($id, Request $request)
     {
-        $request->validate(([
+        $request->validate([
             'image' => ['required', 'file', 'mimes:png,jpg,jpeg', 'max:2048']
-        ]));
+        ]);
 
         $product = Product::find($id);
         $stored_image_path = Str::after($product->image, env('APP_URL') . '/storage/');

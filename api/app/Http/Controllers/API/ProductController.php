@@ -116,8 +116,9 @@ class ProductController extends Controller
             'market_price' => $data['market_price'],
             'price' => $data['price']
         ]);
+        $json_variants = json_decode($request->input('variants'), true);
 
-        foreach ($data['variants'] as $variant) {
+        foreach ($json_variants as $variant) {
             $color = new Color();
             $color->color = $variant['color'];
             $color->save();

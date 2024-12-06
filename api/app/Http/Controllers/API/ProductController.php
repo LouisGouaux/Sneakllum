@@ -167,7 +167,7 @@ class ProductController extends Controller
      * Update the specified resource in storage.
      */
     public
-    function update(Request $request, Product $product)
+    function update($id, Request $request)
     {
         $data = $request->validate([
             'brand' => ['required', 'string'],
@@ -180,7 +180,8 @@ class ProductController extends Controller
             'release_year' => ['integer', 'nullable'],
         ]);
 
-        $product->update($data);
+        $product = Product::find($id);
+        $product->update($data)->refresh();
 
         return response()->json([
             'success' => true,

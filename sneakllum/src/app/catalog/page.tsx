@@ -21,7 +21,6 @@ export default function SearchPage() {
     const [error, setError] = useState<string | null>(null);
     const [totalPages, setTotalPages] = useState<number>(1);
 
-    // Filters State
     const getInitialFilters = () => {
         if (pathname === "/search/woman") {
             return { size: "", category: "women", isNew: false };
@@ -32,7 +31,7 @@ export default function SearchPage() {
         } else if (pathname === "/search/new") {
             return { size: "", category: "", isNew: true };
         }
-        return { size: "", category: "", isNew: false }; // Default filters
+        return { size: "", category: "", isNew: false };
     };
 
     const [filters, setFilters] = useState(getInitialFilters);
@@ -75,7 +74,7 @@ export default function SearchPage() {
             ...prevFilters,
             [filterName]: value,
         }));
-        setCurrentPage(1); // Reset to first page on filter change
+        setCurrentPage(1);
     };
 
     const handleNextPage = () => {

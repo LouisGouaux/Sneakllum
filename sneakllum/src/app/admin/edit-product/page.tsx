@@ -37,13 +37,31 @@ interface EditProduct {
 export default function EditProduct() {
     const searchParams = useSearchParams();
     const productId = searchParams.get("id"); // Assuming the ID is passed as a query parameter
-    const [product, setProduct] = useState<Product>(null);
+    const [product, setProduct] = useState<Product>({
+        id: 0,
+        name: "",
+        brand: "",
+        gender: "",
+        releaseDate: "",
+        releaseYear: "",
+        description: "",
+        marketPrice: 0,
+        price: 0,
+        image: "",
+    });
     const [variants, setVariants] = useState<Variant[]>([]);
     const [sizes, setSizes] = useState<Size[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-
     const [isModalOpen, setIsModalOpen] = useState(false); // For handling modal visibility
-    const [productEditData, setProductEditData] = useState<EditProduct>(null);
+    const [productEditData, setProductEditData] = useState<EditProduct>({
+        name: "",
+        brand:"",
+        gender: "",
+        releaseYear:  "",
+        marketPrice: 0, // Use 0 instead of null
+        price:0, // Use 0 instead of null
+        description: "",
+    });
 
     useEffect(() => {
         if (productId) {

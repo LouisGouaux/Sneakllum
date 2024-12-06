@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useUser } from "../../../context/UserContext";
+import { useSearchParams } from "next/navigation";
 
 interface Variant {
     id: number;
@@ -14,27 +13,37 @@ interface Size {
     id: number;
     value: number;
 }
-
+interface Product {
+    id: number;
+    brand: string;
+    name: string;
+    price: number;
+    image: string;
+    gender: string,
+    releaseDate: string,
+    releaseYear: string,
+    description: string,
+    marketPrice: number,
+}
+interface EditProduct {
+    brand: string;
+    name: string;
+    price: number;
+    gender: string,
+    releaseYear: string,
+    description: string,
+    marketPrice: number,
+}
 export default function EditProduct() {
-    const router = useRouter();
     const searchParams = useSearchParams();
     const productId = searchParams.get("id"); // Assuming the ID is passed as a query parameter
-    const { token } = useUser();
-
-    const [product, setProduct] = useState<any>(null);
+    const [product, setProduct] = useState<Product>(null);
     const [variants, setVariants] = useState<Variant[]>([]);
     const [sizes, setSizes] = useState<Size[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
     const [isModalOpen, setIsModalOpen] = useState(false); // For handling modal visibility
-    const [productEditData, setProductEditData] = useState<any>({
-        name: "",
-        brand: "",
-        gender: "",
-        releaseYear: "",
-        marketPrice: "",
-        price: "",
-    });
+    const [productEditData, setProductEditData] = useState<EditProduct>(null);
 
     useEffect(() => {
         if (productId) {
@@ -66,14 +75,15 @@ export default function EditProduct() {
 
                 // Set the productEditData to pre-fill the modal fields
                 setProductEditData({
-                    name: data.name,
-                    brand: data.brand,
-                    gender: data.gender,
+                    name: data.name || "",
+                    brand: data.brand || "",
+                    gender: data.gender || "",
                     releaseYear: data.release_year || "",
-                    marketPrice: data.market_price || "",
-                    price: data.price || "",
+                    marketPrice: data.market_price || 0, // Use 0 instead of null
+                    price: data.price || 0, // Use 0 instead of null
                     description: data.story || "",
                 });
+
             } else {
                 console.error("Failed to fetch product data.");
             }
@@ -91,6 +101,7 @@ export default function EditProduct() {
             if (response.ok) {
                 const data = await response.json();
                 setSizes(data.data);
+                console.log(sizes)
             } else {
                 console.error("Failed to fetch sizes.");
             }
@@ -122,8 +133,9 @@ export default function EditProduct() {
             brand: product?.brand || "",
             gender: product?.gender || "",
             releaseYear: product?.releaseYear || "",
-            marketPrice: product?.marketPrice || "",
-            price: product?.price || "",
+            marketPrice: product?.marketPrice || 0,
+            price: product?.price || 0,
+            description: product?.description || ""
         });
         setIsModalOpen(false); // Close the modal without saving
     };

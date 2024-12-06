@@ -22,7 +22,7 @@ class OrderResource extends JsonResource
             'user_phone' => $this->user_phone,
             'total_amount' => $this->total_amount,
             'products' => $this->get_products($this->variants)
-        ]
+        ];
     }
 
     private function get_products($variants) {
@@ -31,7 +31,7 @@ class OrderResource extends JsonResource
             $product = [
                 'name' => $variant->product->name,
                 'price' => $variant->product->price /100,
-                'image' => $variant->product->image
+                'image' => $variant->product->image,
                 'quantity' => $variant->quantity
             ];
             array_push($products, $product);

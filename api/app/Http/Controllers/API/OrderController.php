@@ -52,11 +52,31 @@ class OrderController extends Controller
             '*.quantity' => ['required', 'integer', 'min:1']
         ]);
 
-        $amount = $this->calculate_amount($basket);
+        $order_data = $request->validate([
+            'user_first_name' => ['required', 'string'],
+            'user_last_name' => ['required', 'string'],
+            'user_email' => ['required', 'email'],
+            'user_phone' => ['required', 'string'],
+            'shipping_address' => ['required', 'string']
+        ]);
+        $order_data['order_number'] = Str::random(6);
+        $order_data['billing_address'] = $data['shipping_address'];
+        $order_data['total_amount'] = $this->calculate_amount($basket);
+        $order = Order::create($order_data);
+        foreach ($basket as $item) {
+            $variant = Variant::where('product_id', $item['product_id'])->where('size_id', $item['size_id'])->where('color_id', $item['color_id'])->first();
+            $order->variants()->attach($variant->id, [
+                'quantity' => $item->pivot->quantity
+            ]);
+        }
 
         return response()->json([
-            'total_amount' => $amount
-        ]);
+            'success' => true,
+            'data' => [
+                'order_number' => $order->order_number
+            ],
+            'message' => 'Order created successfully'
+        ], 201);
     }
 
     private function calculate_amount($basket)

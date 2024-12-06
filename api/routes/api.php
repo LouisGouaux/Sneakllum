@@ -27,3 +27,4 @@ Route::get('products', [\App\Http\Controllers\API\ProductController::class, 'ind
 Route::get('brands', [\App\Http\Controllers\API\FilterController::class, 'brand_index']);
 Route::post('order', [\App\Http\Controllers\API\OrderController::class, 'store_guest_order']);
 Route::get('sizes', [\App\Http\Controllers\API\FilterController::class, 'size_index']);
+Route::post('orders', [\App\Http\Controllers\API\OrderController::class, 'store_guest_order']);

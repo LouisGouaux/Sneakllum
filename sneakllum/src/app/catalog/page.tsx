@@ -1,109 +1,90 @@
 "use client";
 import React, { useEffect, useState, useCallback } from "react";
 import Button from "../../components/Button";
-import {useRouter} from "next/navigation";
-
-import { usePathname } from 'next/navigation'
+import { useRouter, usePathname } from "next/navigation";
 
 interface Product {
-  id: number;
-  brand: string;
-  name: string;
-  price: number;
-  image: string;
+    id: number;
+    brand: string;
+    name: string;
+    price: number;
+    image: string;
 }
 
-
 export default function SearchPage() {
-  const router = useRouter();
-  const pathname = usePathname()
-    console.log(pathname)
-  const [products, setProducts] = useState<Product[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [totalPages, setTotalPages] = useState<number>(1);
-  // Filters State
-  const [filters, setFilters] = useState({
-    size: "", // Example sizes: "20", "22", "24"
-    category: "", // 'men', 'women', 'unisex', 'youth', 'child', 'infant'
-    isNew: false, // true for new items
-  });
+    const router = useRouter();
+    const pathname = usePathname();
 
+    const [products, setProducts] = useState<Product[]>([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [totalPages, setTotalPages] = useState<number>(1);
 
-  const fetchProducts = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const query = new URLSearchParams({
-        page: currentPage.toString(),
-        ...(filters.size && { size: filters.size }),
-        ...(filters.category && { gender: filters.category }),
-        ...(filters.isNew && { sort: "new" }),
-      }).toString();
+    // Filters State
+    const getInitialFilters = () => {
+        if (pathname === "/search/woman") {
+            return { size: "", category: "women", isNew: false };
+        } else if (pathname === "/search/man") {
+            return { size: "", category: "men", isNew: false };
+        } else if (pathname === "/search/child") {
+            return { size: "", category: "child", isNew: false };
+        } else if (pathname === "/search/new") {
+            return { size: "", category: "", isNew: true };
+        }
+        return { size: "", category: "", isNew: false }; // Default filters
+    };
 
-      const response = await fetch(
-        `https://5b8cmbmlsw.preview.infomaniak.website/api/products?${query}`
-      );
+    const [filters, setFilters] = useState(getInitialFilters);
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch products.");
-      }
+    const fetchProducts = useCallback(async () => {
+        setIsLoading(true);
+        try {
+            const query = new URLSearchParams({
+                page: currentPage.toString(),
+                ...(filters.size && { size: filters.size }),
+                ...(filters.category && { gender: filters.category }),
+                ...(filters.isNew && { sort: "new" }),
+            }).toString();
 
-      const data = await response.json();
-      setProducts(data.data);
-      setTotalPages(data.meta.last_page);
-    } catch (err) {
-      setError("Failed to load products. Please try again later.");
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [currentPage, filters]);
+            const response = await fetch(
+                `https://5b8cmbmlsw.preview.infomaniak.website/api/products?${query}`
+            );
 
-  useEffect(() => {
-    fetchProducts();
-    /*  if (pathname === "/search/woman"){
-          setFilters({
-              size: "", // Example sizes: "20", "22", "24"
-              category: "women", // 'men', 'women', 'unisex', 'youth', 'child', 'infant'
-              isNew: false,
-          })
-      } else if(pathname === "/search/man"){
-          setFilters({
-              size: "", // Example sizes: "20", "22", "24"
-              category: "men", // 'men', 'women', 'unisex', 'youth', 'child', 'infant'
-              isNew: false,
-          })
-      }else if(pathname === "/search/child"){
-          setFilters({
-              size: "", // Example sizes: "20", "22", "24"
-              category: "child", // 'men', 'women', 'unisex', 'youth', 'child', 'infant'
-              isNew: false,
-          })
-      }else if(pathname === "/search/new"){
-          setFilters({
-              size: "", // Example sizes: "20", "22", "24"
-              category: "", // 'men', 'women', 'unisex', 'youth', 'child', 'infant'
-              isNew: true,
-          })
-      }*/
-  }, [fetchProducts]);
+            if (!response.ok) {
+                throw new Error("Failed to fetch products.");
+            }
 
-  const handleFilterChange = (filterName: string, value: unknown) => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      [filterName]: value,
-    }));
-    setCurrentPage(1); // Reset to first page on filter change
-  };
+            const data = await response.json();
+            setProducts(data.data);
+            setTotalPages(data.meta.last_page);
+        } catch (err) {
+            setError("Failed to load products. Please try again later.");
+            console.error(err);
+        } finally {
+            setIsLoading(false);
+        }
+    }, [currentPage, filters]);
 
-  const handleNextPage = () => {
-    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
-  };
+    useEffect(() => {
+        fetchProducts();
+    }, [fetchProducts]);
 
-  const handlePreviousPage = () => {
-    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
-  };
+    const handleFilterChange = (filterName: string, value: unknown) => {
+        setFilters((prevFilters) => ({
+            ...prevFilters,
+            [filterName]: value,
+        }));
+        setCurrentPage(1); // Reset to first page on filter change
+    };
+
+    const handleNextPage = () => {
+        if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
+    };
+
+    const handlePreviousPage = () => {
+        if (currentPage > 1) setCurrentPage((prev) => prev - 1);
+    };
 
     return (
         <div className="w-screen p-6 flex flex-col">
@@ -183,8 +164,7 @@ export default function SearchPage() {
                                 label="View Product"
                                 variant="primary"
                                 className="mt-4 w-full"
-                                onClick={() => router.push(`/product/?id=`+ product.id
-                                )}
+                                onClick={() => router.push(`/product/?id=` + product.id)}
                             />
                         </div>
                     ))}

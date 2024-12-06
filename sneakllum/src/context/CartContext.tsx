@@ -197,7 +197,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   [fetchCart]
 );
 
-
     const removeFromCart = useCallback(
         async (id: number, sizeId: number | null, colorId: number | null, quantity: number | null = 1) => {
             const token = localStorage.getItem("token");

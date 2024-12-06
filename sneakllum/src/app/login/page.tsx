@@ -49,13 +49,17 @@ export default function LoginPage() {
       if (response.ok) {
         const data = await response.json();
 
-        const { token, first_name } = data.data;
+        const { token, first_name, is_admin } = data.data;
 
-        // Loguer les données pour débogage
+        // Debugging logs
         console.log("Token:", token);
         console.log("First Name:", first_name);
+        console.log("Is Admin:", is_admin);
 
-        login({ name: first_name, email: formData.email }, token);
+        login(
+            { name: first_name, email: formData.email, isAdmin: is_admin || false },
+            token
+        );
 
         setSuccess("Login successful!");
         router.push("/");
@@ -72,57 +76,58 @@ export default function LoginPage() {
     } catch (err) {
       setIsLoading(false);
       setError("An error occurred. Please try again later.");
-      console.log(err);
+      console.error(err);
     }
   };
 
   if (isLoading) {
     return (
-      <div className="text-center flex justify-center items-center h-96">
-      </div>
+        <div className="text-center flex justify-center items-center h-96">
+          Loading...
+        </div>
     );
   } else {
     return (
-      <div className="flex items-center justify-center p-8">
-        <div className="max-w-md w-full p-8 border border-gray-200 rounded-lg shadow-lg bg-white">
-          <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
-          {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
-          {success && <p className="text-green-500 mb-4 text-center">{success}</p>}
-          <form onSubmit={handleSubmit} className="space-y-4 mb-2">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Email</label>
-              <Input
-                type="email"
-                name="email"
-                placeholder="Email"
-                value={formData.email}
-                onChange={handleChange}
-                className="w-full"
+        <div className="flex items-center justify-center p-8">
+          <div className="max-w-md w-full p-8 border border-gray-200 rounded-lg shadow-lg bg-white">
+            <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
+            {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
+            {success && <p className="text-green-500 mb-4 text-center">{success}</p>}
+            <form onSubmit={handleSubmit} className="space-y-4 mb-2">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Email</label>
+                <Input
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="w-full"
+                    variant="secondary"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Password</label>
+                <Input
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    className="w-full"
+                    variant="secondary"
+                />
+              </div>
+              <Button label="Login" variant="primary" className="w-full" />
+            </form>
+            <Button
+                label="Sign Up"
                 variant="secondary"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Password</label>
-              <Input
-                type="password"
-                name="password"
-                placeholder="Password"
-                value={formData.password}
-                onChange={handleChange}
+                onClick={() => router.push("/register")}
                 className="w-full"
-                variant="secondary"
-              />
-            </div>
-            <Button label="Login" variant="primary" className="w-full" />
-          </form>
-          <Button
-            label="Sign Up"
-            variant="secondary"
-            onClick={() => router.push("/register")}
-            className="w-full"
-          />
+            />
+          </div>
         </div>
-      </div>
     );
   }
 }

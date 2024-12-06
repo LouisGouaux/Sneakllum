@@ -112,7 +112,7 @@ class ProductController extends Controller
             'gender' => $data['gender'],
             'release_date' => $data['release_date'],
             'release_year' => $data['release_year'],
-            'image' => asset($file_path),
+            'image' => env('APP_URL') . '/storage/' . $file_path,
             'story' => $data['story'],
             'market_price' => $data['market_price'],
             'price' => $data['price']
@@ -169,7 +169,24 @@ class ProductController extends Controller
     public
     function update(Request $request, Product $product)
     {
-        //
+        $data = $request->validate([
+            'brand' => ['required', 'string'],
+            'name' => ['required', 'string'],
+            'gender' => ['required', 'string', 'exists:products,gender'],
+            'story' => ['required', 'string'],
+            'market_price' => ['required', 'integer', 'min:0'],
+            'price' => ['required'],
+            'release_date' => ['required', 'date'],
+            'release_year' => ['required', 'integer'],
+        ]);
+
+        $product->update($data);
+
+        return response()->json([
+            'success' => true,
+            'data' => new ProductResource($product),
+            'message' => 'product updated successfully'
+        ], 200);
     }
 
     public function update_image(Request $request, Product $product) {

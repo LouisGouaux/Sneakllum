@@ -2,6 +2,8 @@
 import React, { useEffect, useState, useCallback } from "react";
 import Button from "../../components/Button";
 import { useRouter } from "next/navigation";
+import { useUser } from "../../context/UserContext";
+
 
 interface Product {
     id: number;
@@ -17,6 +19,9 @@ interface SearchPageProps {
 
 export default function Admin({ title }: SearchPageProps) {
     const router = useRouter();
+    const { token } = useUser();
+
+
     const [products, setProducts] = useState<Product[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
@@ -29,6 +34,9 @@ export default function Admin({ title }: SearchPageProps) {
         category: title,
         isNew: false,
     });
+
+    // State for CSV upload
+    const [csvFile, setCsvFile] = useState<File | null>(null);
 
     const fetchProducts = useCallback(async () => {
         setIsLoading(true);
@@ -79,9 +87,61 @@ export default function Admin({ title }: SearchPageProps) {
         if (currentPage > 1) setCurrentPage((prev) => prev - 1);
     };
 
-    const handleModifyStocks = () => {
-        // Logic for modifying stocks by CSV
-        console.log("Modify stocks by CSV clicked");
+    const handleCsvFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            console.log(e.target.files[0])
+            setCsvFile(e.target.files[0]);
+            console.log(csvFile)
+        }
+    };
+
+    const handleModifyStocks = async () => {
+        if (!csvFile) {
+            alert("Please select a CSV file before uploading.");
+            return;
+        }
+        console.log(csvFile)
+
+        const formData = new FormData();
+        formData.append("file", csvFile, "stockUpdate.csv");
+        console.log(formData)
+
+        try {
+            console.log(formData)
+            console.log(formData.get("file"))
+            console.log(token)
+
+            console.log(csvFile)
+
+            const response = await fetch("https://5b8cmbmlsw.preview.infomaniak.website/api/products/stock", {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Accept: "application/json",
+                },
+                body: formData,
+                /*body: JSON.stringify({
+                    'file': csvFile,
+                }),*/
+            });
+            //console.log(formData.getAll())
+
+            if (!response.ok) {
+                console.log(formData)
+                console.log(response)
+                const errorData = await response.json();
+                console.log(errorData)
+                console.error("Error response:", errorData);
+                throw new Error("Failed to upload stock CSV.");
+            }
+            console.log(formData)
+            console.log(response)
+            alert("Stock updated successfully!");
+            setCsvFile(null); // Reset file after successful upload
+        } catch (err) {
+            console.log(err);
+            //alert("An error occurred while uploading the CSV file.");
+        }
     };
 
     const handleExportStocks = () => {
@@ -100,11 +160,30 @@ export default function Admin({ title }: SearchPageProps) {
 
             {/* Action Buttons */}
             <div className="flex flex-wrap gap-4 mb-6">
-                <Button
-                    label="Modify stocks by CSV"
-                    variant="secondary"
-                    onClick={handleModifyStocks}
-                />
+                <div>
+                    <Button
+                        label="Modify stocks by CSV"
+                        variant="secondary"
+                        onClick={() => document.getElementById("csvInput")?.click()}
+                    />
+                    <input
+                        id="csvInput"
+                        type="file"
+                        accept=".csv"
+                        onChange={handleCsvFileChange}
+                        className="hidden"
+                    />
+                    {csvFile && (
+                        <div className="mt-2">
+                            <p className="text-sm text-gray-600">Selected file: {csvFile.name}</p>
+                            <Button
+                                label="Upload Stocks"
+                                variant="primary"
+                                onClick={handleModifyStocks}
+                            />
+                        </div>
+                    )}
+                </div>
                 <Button
                     label="Export stocks by CSV"
                     variant="secondary"
@@ -190,7 +269,7 @@ export default function Admin({ title }: SearchPageProps) {
                                 label="Edit product"
                                 variant="primary"
                                 className="mt-4 w-full"
-                                onClick={() => router.push(`/product/?id=` + product.id)}
+                                onClick={() => router.push(`/admin/edit-product?id=` + product.id)}
                             />
                         </div>
                     ))}

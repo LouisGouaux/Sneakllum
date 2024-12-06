@@ -1,16 +1,25 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Button from "../../../components/Button";
+import { useUser } from "../../../context/UserContext";
+
 
 interface Variant {
     color: string;
-    size: string;
+    size_id: string;
     stock: number;
+}
+
+interface Size {
+    id: number;
+    value: number;
 }
 
 export default function AddProduct() {
     const router = useRouter();
+    const { token } = useUser();
+
     const [product, setProduct] = useState({
         name: "",
         brand: "",
@@ -24,8 +33,9 @@ export default function AddProduct() {
     });
 
     const [variants, setVariants] = useState<Variant[]>([
-        { color: "", size: "", stock: 0 },
+        { color: "", size_id: "", stock: 0 },
     ]);
+    const [sizes, setSizes] = useState<Size[]>([]);
 
     const handleProductChange = (field: string, value: unknown) => {
         setProduct((prev) => ({
@@ -43,7 +53,7 @@ export default function AddProduct() {
     };
 
     const addVariant = () => {
-        setVariants((prev) => [...prev, { color: "", size: "", stock: 0 }]);
+        setVariants((prev) => [...prev, { color: "", size_id: "", stock: 0 }]);
     };
 
     const removeVariant = (index: number) => {
@@ -56,7 +66,7 @@ export default function AddProduct() {
         e.preventDefault();
 
         // Validation: At least 1 variant must have valid data
-        if (!variants.some((v) => v.color && v.size && v.stock > 0)) {
+        if (!variants.some((v) => v.color && v.size_id && v.stock > 0)) {
             alert("Please add at least one valid variant.");
             return;
         }
@@ -65,10 +75,10 @@ export default function AddProduct() {
         formData.append("name", product.name);
         formData.append("brand", product.brand);
         formData.append("gender", product.gender);
-        formData.append("releaseDate", product.releaseDate);
-        formData.append("releaseYear", product.releaseYear);
-        formData.append("description", product.description);
-        formData.append("marketPrice", product.marketPrice);
+        formData.append("release_date", product.releaseDate);
+        formData.append("release_year", product.releaseYear);
+        formData.append("story", product.description);
+        formData.append("market_price", product.marketPrice);
         formData.append("price", product.price);
 
         // Append image file
@@ -78,10 +88,17 @@ export default function AddProduct() {
 
         // Append variants as JSON
         formData.append("variants", JSON.stringify(variants));
-
+        for (var value of formData.values()) {
+            console.log(value);
+        }
         try {
-            const response = await fetch("/api/products", {
+            const response = await fetch("https://5b8cmbmlsw.preview.infomaniak.website/api/products", {
                 method: "POST",
+                headers: {
+                    /*'Content-Type': "multipart/form-data",*/
+                    Authorization: `Bearer ${token}`,
+                    Accept: "application/json",
+                },
                 body: formData,
             });
 
@@ -96,6 +113,23 @@ export default function AddProduct() {
             alert("An error occurred while adding the product.");
         }
     };
+    const fetchSizes = async () => {
+        try {
+            const response = await fetch("https://5b8cmbmlsw.preview.infomaniak.website/api/sizes");
+            if (response.ok) {
+                const data = await response.json();
+                setSizes(data.data); // Set the sizes array
+            } else {
+                console.error("Failed to fetch sizes");
+            }
+        } catch (err) {
+            console.error("Error fetching sizes:", err);
+        }
+    };
+
+    useEffect(() => {
+        fetchSizes();
+    }, []);
 
     return (
         <div className="w-screen p-6 flex flex-col items-center">
@@ -227,15 +261,21 @@ export default function AddProduct() {
                             </div>
                             <div className="flex-1">
                                 <label className="block font-semibold">Size</label>
-                                <input
-                                    type="text"
-                                    value={variant.size}
+                                <select
+                                    value={variant.size_id}
                                     onChange={(e) =>
-                                        handleVariantChange(index, "size", e.target.value)
+                                        handleVariantChange(index, "size_id", e.target.value)
                                     }
                                     className="border p-2 rounded w-full"
                                     required
-                                />
+                                >
+                                    <option value="">Select Size</option>
+                                    {sizes.map((size) => (
+                                        <option key={size.id} value={size.id}>
+                                            {size.value}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
                             <div className="flex-1">
                                 <label className="block font-semibold">Stock</label>

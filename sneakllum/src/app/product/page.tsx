@@ -157,81 +157,82 @@ export default function ProductPage() {
     }
 
     return product ? (
-        <div className="w-screen flex flex-col overflow-y-auto">
-            <div className="flex flex-row w-full h-2/3">
-                <div className="flex justify-end items-start w-2/4">
-                    <img
-                        src={product.image}
-                        alt={product.name}
-                        className="h-fit w-8/12 object-cover"
+        <div className="w-screen flex flex-col overflow-y-auto p-6 lg:px-8">
+            <div className="flex flex-col lg:flex-row w-full h-auto lg:h-2/3 gap-8">
+                <div className="flex justify-center lg:justify-end items-start w-full lg:w-1/2">
+                <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full lg:w-3/4 object-cover"
+                />
+                </div>
+                <div className="flex flex-col justify-start w-full lg:w-1/2">
+                <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
+                <p className="text-lg text-gray-600 mb-4">{product.brand}</p>
+                <p className="text-sm font-semibold text-gray-500">
+                    Gender: <span className="text-gray-700">{product.gender}</span>
+                </p>
+                <p className="text-lg font-semibold mt-4">
+                    Market Value:{" "}
+                    <span className="text-blue-600">${product.market_price}</span>
+                </p>
+                <p className="text-lg font-semibold mt-4">
+                    Price: <span className="text-blue-600">${product.price}</span>
+                </p>
+                <p className="text-sm text-gray-700 mt-6">{product.story}</p>
+                <div className="mt-6">
+                    <h3 className="text-lg font-bold mb-2">Select Color:</h3>
+                    <div className="flex gap-2 flex-wrap">
+                    {product.colors.map((color) => (
+                        <button
+                        key={color.id}
+                        onClick={() => setSelectedColorId(color.id)}
+                        className={`px-4 py-2 border rounded-md ${
+                            selectedColorId === color.id
+                            ? "bg-blue-600 text-white"
+                            : "bg-gray-200 text-gray-800"
+                        }`}
+                        >
+                        {color.value}
+                        </button>
+                    ))}
+                    </div>
+                </div>
+
+                <div className="mt-6">
+                    <h3 className="text-lg font-bold mb-2">Select Size:</h3>
+                    <div className="flex gap-2 flex-wrap">
+                    {product.sizes.map((size) => (
+                        <button
+                        key={size.id}
+                        onClick={() => setSelectedSizeId(size.id)}
+                        className={`px-4 py-2 border rounded-md ${
+                            selectedSizeId === size.id
+                            ? "bg-blue-600 text-white"
+                            : "bg-gray-200 text-gray-800"
+                        }`}
+                        >
+                        {size.value}
+                        </button>
+                    ))}
+                    </div>
+                </div>
+                <div className="mt-6 flex flex-col space-y-4 lg:w-5/12">
+                    <Button
+                    label={isAddingToCart ? "Buying..." : "Buy now"}
+                    variant="primary"
+                    disabled={!selectedSizeId || !selectedColorId || isAddingToCart}
+                    onClick={handleBuyNow}
+                    icon={isAddingToCart ? <FaCheck /> : null}
+                    />
+                    <Button
+                    label={isAddingToCart ? "Adding..." : "Add to Cart"}
+                    variant="secondary"
+                    disabled={!selectedSizeId || !selectedColorId || isAddingToCart}
+                    onClick={handleAddToCart}
+                    icon={isAddingToCart ? <FaCheck /> : null}
                     />
                 </div>
-                <div className="flex flex-col justify-start mt-11 ml-11 w-2/4">
-                    <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
-                    <p className="text-lg text-gray-600 mb-4">{product.brand}</p>
-                    <p className="text-sm font-semibold text-gray-500">
-                        Gender: <span className="text-gray-700">{product.gender}</span>
-                    </p>
-                    <p className="text-lg font-semibold mt-4">
-                        Market Value: <span className="text-blue-600">${product.market_price}</span>
-                    </p>
-                    <p className="text-lg font-semibold mt-4">
-                        Price: <span className="text-blue-600">${product.price}</span>
-                    </p>
-                    <p className="text-sm text-gray-700 mt-6 w-5/12">{product.story}</p>
-                    <div className="mt-6">
-                        <h3 className="text-lg font-bold mb-2">Select Color:</h3>
-                        <div className="flex gap-2 flex-wrap w-6/12">
-                            {product.colors.map((color) => (
-                                <button
-                                    key={color.id}
-                                    onClick={() => setSelectedColorId(color.id)}
-                                    className={`px-4 py-2 border rounded-md ${
-                                        selectedColorId === color.id
-                                            ? "bg-blue-600 text-white"
-                                            : "bg-gray-200 text-gray-800"
-                                    }`}
-                                >
-                                    {color.value}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div className="mt-6">
-                        <h3 className="text-lg font-bold mb-2">Select Size:</h3>
-                        <div className="flex gap-2 flex-wrap w-6/12">
-                            {product.sizes.map((size) => (
-                                <button
-                                    key={size.id}
-                                    onClick={() => setSelectedSizeId(size.id)}
-                                    className={`px-4 py-2 border rounded-md ${
-                                        selectedSizeId === size.id
-                                            ? "bg-blue-600 text-white"
-                                            : "bg-gray-200 text-gray-800"
-                                    }`}
-                                >
-                                    {size.value}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-                    <div className="mt-6 flex flex-col space-y-4 w-5/12">
-                        <Button
-                            label={isAddingToCart ? "Buying..." : "Buy now"}
-                            variant="primary"
-                            disabled={!selectedSizeId || !selectedColorId || isAddingToCart}
-                            onClick={handleBuyNow}
-                            icon={isAddingToCart ? <FaCheck /> : null}
-                        />
-                        <Button
-                            label={isAddingToCart ? "Adding..." : "Add to Cart"}
-                            variant="secondary"
-                            disabled={!selectedSizeId || !selectedColorId || isAddingToCart}
-                            onClick={handleAddToCart}
-                            icon={isAddingToCart ? <FaCheck /> : null}
-                        />
-                    </div>
                 </div>
             </div>
         </div>

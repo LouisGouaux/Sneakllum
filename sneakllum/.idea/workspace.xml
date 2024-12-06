@@ -5,7 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4eb65f6b-5240-4eca-8b0d-2e2252b0c980" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/admin/edit-product/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/admin/edit-product/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/search/child/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/search/child/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/search/man/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/search/man/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/search/new/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/search/new/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/search/offers/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/search/offers/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/search/woman/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/search/woman/page.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,7 +80,7 @@
       <workItem from="1731659834182" duration="91000" />
       <workItem from="1732264615120" duration="16600000" />
       <workItem from="1732869064924" duration="7745000" />
-      <workItem from="1733070434752" duration="37119000" />
+      <workItem from="1733070434752" duration="37746000" />
     </task>
     <servers />
   </component>

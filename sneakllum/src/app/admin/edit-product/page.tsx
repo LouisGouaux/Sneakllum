@@ -130,13 +130,16 @@ export default function EditProduct() {
     };
 
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+    ) => {
         const { name, value } = e.target;
         setProductEditData((prevData) => ({
             ...prevData,
             [name]: value,
         }));
     };
+
 
     const handleSave = () => {
         // You would call your API to save the updated product details here
@@ -366,6 +369,7 @@ export default function EditProduct() {
                                 <option value="infant">Infant</option>
                             </select>
                         </div>
+
 
                         {/* Release Year Field (Numeric with Min/Max) */}
                         <div>

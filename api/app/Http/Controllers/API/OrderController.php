@@ -22,7 +22,7 @@ class OrderController extends Controller
             'shipping_address' => ['required', 'string']
         ]);
 
-        $basket = $request->user()->basket;
+        $basket = $request->user()->basket->variants;
         return response()->json($basket);
         $data['order_number'] = Str::random(6);
         $data['billing_address'] = $data['shipping_address'];

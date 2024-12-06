@@ -24,6 +24,7 @@ class OrderController extends Controller
         ]);
 
         $basket = $request->user()->basket->variants;
+        $data['user_id'] = $request->user()->id;
         $data['order_number'] = Str::random(6);
         $data['billing_address'] = $data['shipping_address'];
         $data['total_amount'] = $this->calculate_amount($basket);

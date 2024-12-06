@@ -1,6 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+import { useUser } from "@/context/UserContext";
+
 
 interface Variant {
     id: number;
@@ -35,6 +37,8 @@ interface EditProduct {
     marketPrice: number,
 }
 export default function EditProduct() {
+    const { token } = useUser();
+
     const searchParams = useSearchParams();
     const productId = searchParams.get("id"); // Assuming the ID is passed as a query parameter
     const [product, setProduct] = useState<Product>({
@@ -60,6 +64,7 @@ export default function EditProduct() {
 
     const [variantToEdit, setVariantToEdit] = useState<Variant | null>(null);
     const [variantToRemove, setVariantToRemove] = useState<Variant | null>(null);
+    const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [productEditData, setProductEditData] = useState<EditProduct>({
         name: "",
         brand:"",
@@ -148,12 +153,93 @@ export default function EditProduct() {
     };
 
 
-    const handleSave = () => {
-        // You would call your API to save the updated product details here
-        console.log("Product details updated:", productEditData);
-        // Close the modal after saving
-        setIsModalOpen(false);
+    const handleSave = async () => {
+        const apiUrl = `https://5b8cmbmlsw.preview.infomaniak.website/api/products/${product.id}`; // Replace 'id' with the actual product ID
+
+        // Map productEditData fields to API-compliant format
+        const payload = {
+            name: productEditData.name,
+            brand: productEditData.brand,
+            gender: productEditData.gender,
+            release_date: product.releaseDate,
+            release_year: productEditData.releaseYear, // Map releaseYear to release_year
+            market_price: productEditData.marketPrice, // Map marketPrice to market_price
+            price: productEditData.price,
+            story: productEditData.description,
+        };
+
+        try {
+            const response = await fetch(apiUrl, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                    Accept: "application/json",
+                },
+                body: JSON.stringify(payload), // Use the mapped payload
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to update product: ${response.statusText}`);
+            }
+
+            const updatedProduct = await response.json();
+            console.log("Product updated successfully:", updatedProduct);
+
+            // Close the modal after saving
+            setIsModalOpen(false);
+        } catch (error) {
+            console.error("Error updating product:", error);
+            // Optionally display an error message to the user
+        }
     };
+    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        setSelectedImage(file || null); // Set the selected image file or null
+    };
+
+    const handleImageUpload = async () => {
+        if (!selectedImage) {
+            alert("Please select an image to upload.");
+            return;
+        }
+
+        const apiUrl = `https://5b8cmbmlsw.preview.infomaniak.website/api/products/${product.id}/images`; // Replace 'product.id' with the actual product ID
+
+        const formData = new FormData();
+        formData.append("image", selectedImage, "updateImage.png"); // Append the image file with the key 'image'
+
+        try {
+            const response = await fetch(apiUrl, {
+                method: "PUT",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Accept: "application/json",
+                },
+                body: formData, // Use FormData for the request body
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to upload image: ${response.statusText}`);
+            }
+
+            const updatedImageResponse = await response.json();
+            console.log("Image uploaded successfully:", updatedImageResponse);
+
+            // Optionally update the UI with the new image
+            setProduct((prevProduct) => ({
+                ...prevProduct,
+                image: updatedImageResponse.image, // Assuming the API returns the updated image URL
+            }));
+
+            setIsImageModalOpen(false); // Close the modal after uploading
+        } catch (error) {
+            console.error("Error uploading image:", error);
+            alert("Image upload failed. Please try again.");
+        }
+    };
+
+
 
     const handleCancel = () => {
         // Reset the edit data to current product data
@@ -531,6 +617,7 @@ export default function EditProduct() {
                     <div className="bg-white p-6 rounded-lg shadow-lg w-96">
                         <h2 className="text-xl font-semibold mb-4">Edit Product Image</h2>
 
+                        {/* Display current image */}
                         <div className="mb-4">
                             <label className="block font-semibold mb-2">Current Image</label>
                             <img
@@ -540,15 +627,18 @@ export default function EditProduct() {
                             />
                         </div>
 
+                        {/* File input for image selection */}
                         <div className="mb-4">
-                            <button
-                                type="button"
-                                className="bg-gray-300 text-black px-4 py-2 rounded w-full"
-                            >
-                                Select Image
-                            </button>
+                            <label className="block font-semibold mb-2">Select New Image</label>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={handleImageChange}
+                                className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
+                            />
                         </div>
 
+                        {/* Modal Buttons */}
                         <div className="mt-4 flex justify-between">
                             <button
                                 type="button"
@@ -559,6 +649,7 @@ export default function EditProduct() {
                             </button>
                             <button
                                 type="button"
+                                onClick={handleImageUpload}
                                 className="bg-blue-500 text-white px-4 py-2 rounded"
                             >
                                 Confirm

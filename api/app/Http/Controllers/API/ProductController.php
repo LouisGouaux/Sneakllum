@@ -173,7 +173,7 @@ class ProductController extends Controller
             'brand' => ['required', 'string'],
             'name' => ['required', 'string'],
             'gender' => ['required', 'string', 'exists:products,gender'],
-            'story' => ['string'],
+            'story' => ['string', 'nullable'],
             'market_price' => ['required', 'integer', 'min:0'],
             'price' => ['required'],
             'release_date' => ['date'],

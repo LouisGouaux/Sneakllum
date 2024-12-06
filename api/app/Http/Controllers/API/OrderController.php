@@ -30,7 +30,7 @@ class OrderController extends Controller
         foreach ($basket as $item) {
             $variant = Variant::where('product_id', $item['product_id'])->where('size_id', $item['size_id'])->where('color_id', $item['color_id'])->first();
             $order->variants()->attach($variant->id, [
-                'quantity' => $item['quantity']
+                'quantity' => $item->pivot->quantity
             ]);
         }
 

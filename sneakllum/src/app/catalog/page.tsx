@@ -158,7 +158,7 @@ export default function SearchPage() {
                             />
                             <h3 className="text-lg font-bold">{product.name}</h3>
                             <p className="text-gray-600">{product.brand}</p>
-                            <p className="text-blue-600 font-semibold">${product.price / 100}</p>
+                            <p className="text-blue-600 font-semibold">${product.price}</p>
                             <Button
                                 label="View Product"
                                 variant="primary"

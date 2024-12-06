@@ -187,7 +187,8 @@ class ProductController extends Controller
             unset($data['release_year']);
         }
         $product = Product::find($id);
-        $product->update($data)->refresh();
+        $product->update($data);
+        $product->refresh();
 
         return response()->json([
             'success' => true,
@@ -196,12 +197,13 @@ class ProductController extends Controller
         ], 200);
     }
 
-    public function update_image(Request $request, Product $product)
+    public function update_image($id, Request $request)
     {
         $request->validate(([
             'image' => ['required', 'file', 'mimes:png,jpg,jpeg', 'max:2048']
         ]));
 
+        $product = Product::find($id);
         $stored_image_path = Str::after($product->image, env('APP_URL') . '/storage/');
         Storage::disk('public')->delete($stored_image_path);
         $file_path = $request->file()->store('images/products', 'public');

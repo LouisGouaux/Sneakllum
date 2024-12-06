@@ -24,7 +24,8 @@ class ProductResource extends JsonResource
             'market_price' => $this->market_price/100,
             'price' => $this->price/100,
             'sizes' => SizeResource::collection($this->sizes),
-            'colors' => ColorResource::collection($this->colors)
+            'colors' => ColorResource::collection($this->colors),
+            'variants' => VariantResource::collection($this->variants),
         ];
     }
 }

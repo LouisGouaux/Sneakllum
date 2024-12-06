@@ -8,6 +8,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('basket', [\App\Http\Controllers\API\BasketController::class, 'store']);
     Route::get('basket', [\App\Http\Controllers\API\BasketController::class, 'show']);
     Route::delete('basket', [\App\Http\Controllers\API\BasketController::class, 'delete_products']);
+    Route::post('products/stock', [\App\Http\Controllers\API\ProductController::class, 'update_stock']);
+    Route::put('products/{id/images', [\App\Http\Controllers\API\ProductController::class, 'update_image']);
+    Route::put('products/{id}', [\App\Http\Controllers\API\ProductController::class, 'update']);
+    Route::post('products', [\App\Http\Controllers\API\ProductController::class, 'store'])->middleware(\App\Http\Middleware\EnsureUserIsAdmin::class);
+
 
 });
 
@@ -20,3 +25,4 @@ Route::get('products/{id}/check', [\App\Http\Controllers\API\ProductController::
 Route::get('products', [\App\Http\Controllers\API\ProductController::class, 'index']);
 Route::get('brands', [\App\Http\Controllers\API\FilterController::class, 'brand_index']);
 Route::post('order', [\App\Http\Controllers\API\OrderController::class, 'store_guest_order']);
+Route::get('sizes', [\App\Http\Controllers\API\FilterController::class, 'size_index']);

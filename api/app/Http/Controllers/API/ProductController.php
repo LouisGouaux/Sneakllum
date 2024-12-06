@@ -180,6 +180,12 @@ class ProductController extends Controller
             'release_year' => ['integer', 'nullable'],
         ]);
 
+        if (!isset($data['release_date'])) {
+            unset($data['release_date']);
+        }
+        if (!isset($data['release_year'])) {
+            unset($data['release_year']);
+        }
         $product = Product::find($id);
         $product->update($data)->refresh();
 
@@ -190,7 +196,8 @@ class ProductController extends Controller
         ], 200);
     }
 
-    public function update_image(Request $request, Product $product) {
+    public function update_image(Request $request, Product $product)
+    {
         $request->validate(([
             'image' => ['required', 'file', 'mimes:png,jpg,jpeg', 'max:2048']
         ]));

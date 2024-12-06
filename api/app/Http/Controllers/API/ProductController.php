@@ -167,20 +167,33 @@ class ProductController extends Controller
      * Update the specified resource in storage.
      */
     public
-    function update(Request $request, Product $product)
+    function update($id, Request $request)
     {
         $data = $request->validate([
             'brand' => ['required', 'string'],
             'name' => ['required', 'string'],
             'gender' => ['required', 'string', 'exists:products,gender'],
             'story' => ['string', 'nullable'],
-            'market_price' => ['required', 'integer', 'min:0'],
-            'price' => ['required'],
+            'market_price' => ['required', 'numeric', 'min:0'],
+            'price' => ['required', 'numeric'],
             'release_date' => ['date', 'nullable'],
             'release_year' => ['integer', 'nullable'],
         ]);
 
+        if (!isset($data['release_date'])) {
+            unset($data['release_date']);
+        }
+        if (!isset($data['release_year'])) {
+            unset($data['release_year']);
+        }
+        if (!isset($data['story'])) {
+            unset($data['story']);
+        }
+        $data['market_price'] = $data['market_price'] * 100;
+        $data['price'] = $data['price'] * 100;
+        $product = Product::find($id);
         $product->update($data);
+        $product->refresh();
 
         return response()->json([
             'success' => true,
@@ -189,11 +202,13 @@ class ProductController extends Controller
         ], 200);
     }
 
-    public function update_image(Request $request, Product $product) {
+    public function update_image($id, Request $request)
+    {
         $request->validate(([
             'image' => ['required', 'file', 'mimes:png,jpg,jpeg', 'max:2048']
         ]));
 
+        $product = Product::find($id);
         $stored_image_path = Str::after($product->image, env('APP_URL') . '/storage/');
         Storage::disk('public')->delete($stored_image_path);
         $file_path = $request->file()->store('images/products', 'public');

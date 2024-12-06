@@ -3,11 +3,42 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Order;
 use App\Models\Product;
+use App\Models\Variant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class OrderController extends Controller
 {
+
+    public function store_user_checkout(Request$request) {
+        $data = $request->validate([
+            'user_first_name' => ['required', 'string'],
+            'user_last_name' => ['required', 'string'],
+            'user_email' => ['required', 'email'],
+            'user_phone' => ['required', 'string'],
+            'shipping_address' => ['required', 'string']
+        ]);
+
+        $basket = $request->user()->basket;
+        $data['order_number'] = Str::random(6);
+        $data['billing_address'] = $data['shipping_address'];
+        $data['total_amount'] = $this->calculate_amount($basket);
+        $order = Order::create($data);
+        foreach ($basket as $item) {
+            $variant = Variant::where('product_id', $item['product_id'])->where('size_id', $item['size_id'])->where('color_id', $item['color_id'])->first();
+            $order->variants()->attach($variant->id);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'order_number' => $order->order_number
+            ],
+            'message' => 'Order created successfully'
+        ], 201);
+    }
     public function store_guest_order(Request $request)
     {
         $basket = $request->validate([

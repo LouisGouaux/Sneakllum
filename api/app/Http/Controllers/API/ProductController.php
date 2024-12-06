@@ -10,6 +10,7 @@ use App\Models\Product;
 use App\Models\Variant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -185,6 +186,23 @@ class ProductController extends Controller
             'success' => true,
             'data' => new ProductResource($product),
             'message' => 'product updated successfully'
+        ], 200);
+    }
+
+    public function update_image(Request $request, Product $product) {
+        $request->validate(([
+            'image' => ['required', 'file', 'mimes:png,jpg,jpeg', 'max:2048']
+        ]));
+
+        $stored_image_path = Str::after($product->image, env('APP_URL') . '/storage/');
+        Storage::disk('public')->delete($stored_image_path);
+        $file_path = $request->file()->store('images/products', 'public');
+        $product->image = env('APP_URL') . '/storage/' . $file_path;
+        $product->save();
+
+        return response()->json([
+            'success' => true,
+            'data' => new ProductResource($product)
         ], 200);
     }
 

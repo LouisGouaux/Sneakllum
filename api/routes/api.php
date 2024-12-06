@@ -9,6 +9,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('basket', [\App\Http\Controllers\API\BasketController::class, 'show']);
     Route::delete('basket', [\App\Http\Controllers\API\BasketController::class, 'delete_products']);
     Route::post('products/stock', [\App\Http\Controllers\API\ProductController::class, 'update_stock']);
+    Route::put('products/{id/images', [\App\Http\Controllers\API\ProductController::class, 'update_image']);
     Route::put('products/{id}', [\App\Http\Controllers\API\ProductController::class, 'update']);
     Route::post('products', [\App\Http\Controllers\API\ProductController::class, 'store'])->middleware(\App\Http\Middleware\EnsureUserIsAdmin::class);
 

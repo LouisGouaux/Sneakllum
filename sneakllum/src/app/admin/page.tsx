@@ -19,7 +19,8 @@ interface SearchPageProps {
 
 export default function Admin({ title }: SearchPageProps) {
     const router = useRouter();
-    const { user } = useUser();
+    const { token } = useUser();
+
 
     const [products, setProducts] = useState<Product[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -102,32 +103,44 @@ export default function Admin({ title }: SearchPageProps) {
         console.log(csvFile)
 
         const formData = new FormData();
-        formData.append("file", csvFile);
+        formData.append("file", csvFile, "stockUpdate.csv");
         console.log(formData)
 
         try {
             console.log(formData)
+            console.log(formData.get("file"))
+            console.log(token)
+
+            console.log(csvFile)
 
             const response = await fetch("https://5b8cmbmlsw.preview.infomaniak.website/api/products/stock", {
-                method: "PUT",
+                method: "POST",
                 headers: {
-                    Accept: "multipart/form-data", // Add headers for multipart data and JSON
-                    Authorization: `Bearer ${user.name}`, // Add the Bearer token from the context
+                    Authorization: `Bearer ${token}`,
+                    Accept: "application/json",
                 },
                 body: formData,
+                /*body: JSON.stringify({
+                    'file': csvFile,
+                }),*/
             });
-            console.log(formData)
-
+            //console.log(formData.getAll())
 
             if (!response.ok) {
+                console.log(formData)
+                console.log(response)
+                const errorData = await response.json();
+                console.log(errorData)
+                console.error("Error response:", errorData);
                 throw new Error("Failed to upload stock CSV.");
             }
-
+            console.log(formData)
+            console.log(response)
             alert("Stock updated successfully!");
             setCsvFile(null); // Reset file after successful upload
         } catch (err) {
-            //console.error(err);
-            alert("An error occurred while uploading the CSV file.");
+            console.log(err);
+            //alert("An error occurred while uploading the CSV file.");
         }
     };
 
@@ -256,7 +269,7 @@ export default function Admin({ title }: SearchPageProps) {
                                 label="Edit product"
                                 variant="primary"
                                 className="mt-4 w-full"
-                                onClick={() => router.push(`/product/?id=` + product.id)}
+                                onClick={() => router.push(`/admin/edit-product?id=` + product.id)}
                             />
                         </div>
                     ))}

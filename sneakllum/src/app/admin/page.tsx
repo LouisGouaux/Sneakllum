@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import Button from "../../components/Button";
 import { useRouter } from "next/navigation";
-import { useUser } from "../../context/UserContext";
+import { useUser } from "@/context/UserContext";
 
 interface Product {
     id: number;
@@ -12,11 +12,9 @@ interface Product {
     image: string;
 }
 
-interface SearchPageProps {
-    title: string;
-}
 
-const Admin: React.FC<SearchPageProps> = ({ title }) => {
+
+const Admin = () => {
     const router = useRouter();
     const { token } = useUser();
 
@@ -29,7 +27,7 @@ const Admin: React.FC<SearchPageProps> = ({ title }) => {
     // Filters State
     const [filters, setFilters] = useState({
         size: "",
-        category: title,
+        category: "",
         isNew: false,
     });
 
@@ -289,6 +287,6 @@ const Admin: React.FC<SearchPageProps> = ({ title }) => {
             </div>
         </div>
     );
-}
+};
 
 export default Admin;

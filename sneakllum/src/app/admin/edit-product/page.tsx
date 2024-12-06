@@ -50,6 +50,7 @@ export default function EditProduct() {
             fetchProduct();
             fetchSizes();
         }
+        // eslint-disable-next-line
     }, [productId]);
 
     const fetchProduct = async () => {

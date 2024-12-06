@@ -186,7 +186,7 @@ class ProductController extends Controller
         if (!isset($data['release_year'])) {
             unset($data['release_year']);
         }
-        if (!isset($data[''story])) {
+        if (!isset($data['story'])) {
             unset($data['story']);
     }
         $product = Product::find($id);

@@ -175,7 +175,7 @@ class ProductController extends Controller
             'gender' => ['required', 'string', 'exists:products,gender'],
             'story' => ['string', 'nullable'],
             'market_price' => ['required', 'numeric', 'min:0'],
-            'price' => ['required', 'numerique'],
+            'price' => ['required', 'numeric'],
             'release_date' => ['date', 'nullable'],
             'release_year' => ['integer', 'nullable'],
         ]);

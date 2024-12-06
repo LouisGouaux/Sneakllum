@@ -174,8 +174,8 @@ class ProductController extends Controller
             'name' => ['required', 'string'],
             'gender' => ['required', 'string', 'exists:products,gender'],
             'story' => ['string', 'nullable'],
-            'market_price' => ['required', 'integer', 'min:0'],
-            'price' => ['required'],
+            'market_price' => ['required', 'numeric', 'min:0'],
+            'price' => ['required', 'numerique'],
             'release_date' => ['date', 'nullable'],
             'release_year' => ['integer', 'nullable'],
         ]);
@@ -188,7 +188,9 @@ class ProductController extends Controller
         }
         if (!isset($data['story'])) {
             unset($data['story']);
-    }
+        }
+        $product['market_price'] = $data['market_price'] * 100;
+        $data['price'] = $data['price'] * 100;
         $product = Product::find($id);
         $product->update($data);
         $product->refresh();

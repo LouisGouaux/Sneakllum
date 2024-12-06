@@ -25,7 +25,7 @@ class ProductResource extends JsonResource
             'price' => $this->price/100,
             'sizes' => SizeResource::collection($this->sizes),
             'colors' => ColorResource::collection($this->colors),
-            'variants' => $this->when(optional($request->user())->is_admin, VariantResource::collection($this->variants)),
+            'variants' => VariantResource::collection($this->variants),
         ];
     }
 }

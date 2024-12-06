@@ -1,10 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useCart } from "@/context/CartContext"; // Import du CartContext
+import { useCart } from "@/context/CartContext";
+import { useUser } from "@/context/UserContext";
 import Button from "../../components/Button";
+import { useRouter } from "next/navigation";
 
 export default function CheckoutPage() {
-  const { cart, fetchCart } = useCart(); // Récupère les données du panier depuis le CartContext
+  const { cart, fetchCart } = useCart();
+  const { token } = useUser();
   const [userDetails, setUserDetails] = useState({
     firstname: "",
     lastname: "",
@@ -12,13 +15,15 @@ export default function CheckoutPage() {
     phone: "",
     address: "",
   });
+  const [orderNumber, setOrderNumber] = useState<string | null>(null);
+  const [showModal, setShowModal] = useState<boolean>(false);
 
-  // Récupère le panier dès que le composant est monté
+  const router = useRouter();
+
   useEffect(() => {
     fetchCart();
   }, [fetchCart]);
 
-  // Fonction pour gérer les changements dans le formulaire
   const handleChange = (field: string, value: string) => {
     setUserDetails((prev) => ({
       ...prev,
@@ -26,24 +31,64 @@ export default function CheckoutPage() {
     }));
   };
 
-  // Fonction pour valider la commande
-  const handleCheckout = () => {
-    if (!userDetails.firstname || !userDetails.lastname || !userDetails.email || !userDetails.phone || !userDetails.address) {
+  const handleCheckout = async () => {
+    if (
+      !userDetails.firstname ||
+      !userDetails.lastname ||
+      !userDetails.email ||
+      !userDetails.phone ||
+      !userDetails.address
+    ) {
       alert("Please fill out all fields before checking out.");
       return;
     }
 
-    // Simuler l'envoi des données au serveur
-    console.log("Checkout data:", { cart, userDetails });
+    const orderData = {
+      user_first_name: userDetails.firstname,
+      user_last_name: userDetails.lastname,
+      user_email: userDetails.email,
+      user_phone: userDetails.phone,
+      shipping_address: userDetails.address,
+    };
 
-    alert("Checkout successful! Thank you for your purchase.");
+    const url = token
+      ? "https://5b8cmbmlsw.preview.infomaniak.website/api/user/orders"
+      : "https://5b8cmbmlsw.preview.infomaniak.website/api/orders";
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+            Authorization: token ? `Bearer ${token}` : "",
+          "Accept": "application/json",
+        },
+        body: JSON.stringify(orderData),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setOrderNumber(data.data.order_number);
+        setShowModal(true);
+      } else {
+        const errorText = await response.text();
+        console.error("Error during checkout:", errorText);
+        alert("Something went wrong. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error during checkout:", error);
+      alert("An error occurred. Please try again.");
+    }
   };
 
-  // Calculer le total du panier
   const cartTotal = cart.reduce(
-    (total, item) => total + item.price * (item.quantity ?? 1), // Utilisation de 1 par défaut si quantity est null
+    (total, item) => total + item.price * (item.quantity ?? 1),
     0
   );
+
+  const handleModalClose = () => {
+    router.push(`/orders`);
+  };
 
   return (
     <div className="flex flex-col min-h-screen justify-center items-center p-6">
@@ -65,7 +110,6 @@ export default function CheckoutPage() {
                     <h2 className="font-bold">{item.name}</h2>
                     <p className="text-gray-600">Price: ${(item.price / 100).toFixed(2)}</p>
                     <p className="text-gray-600">Quantity: {item.quantity}</p>
-                    <p className="font-semibold">Quantity: {item.quantity ?? 1}</p>
                   </div>
                 </div>
               ))}
@@ -113,7 +157,7 @@ export default function CheckoutPage() {
                 <div>
                   <label htmlFor="phone" className="block font-semibold mb-1">Phone number</label>
                   <input
-                    type="text" // type="text" au lieu de "number" pour permettre plus de flexibilité avec les formats de téléphone
+                    type="text"
                     id="phone"
                     value={userDetails.phone}
                     onChange={(e) => handleChange("phone", e.target.value)}
@@ -145,6 +189,25 @@ export default function CheckoutPage() {
           </div>
         )}
       </div>
+
+      {/* Success Modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-md shadow-lg text-center max-w-sm w-full">
+            <h2 className="text-xl font-bold mb-4">Order Confirmation</h2>
+            <p className="text-lg mb-4">Your order has been successfully placed!</p>
+            <p className="text-sm text-gray-500 mb-4">
+              Order number: <span className="font-semibold">{orderNumber}</span>
+            </p>
+            <Button
+              label="Close"
+              variant="secondary"
+              onClick={handleModalClose}
+              className="w-full"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

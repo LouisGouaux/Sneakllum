@@ -73,7 +73,7 @@ export default function NavBar() {
     { label: "Homme", href: "/search/man" },
     { label: "Femme", href: "/search/woman" },
     { label: "Enfant", href: "/search/child" },
-    { label: "Offres", href: "/search/offers" },
+    { label: "Commandes", href: "/orders" },
   ];
 
   if (user?.isAdmin) {

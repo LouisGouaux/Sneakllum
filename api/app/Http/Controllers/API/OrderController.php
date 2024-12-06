@@ -96,7 +96,7 @@ class OrderController extends Controller
             'user_last_name' => ['required', 'string']
         ]);
         $order = Order::where('order_number', $data['order_number'])
-            ->where('order_last_name', $data['order_last_name'])
+            ->where('user_last_name', $data['user_last_name'])
             ->first();
 
         return response(new OrderResource($order));

@@ -111,7 +111,7 @@ class ProductController extends Controller
             'gender' => $data['gender'],
             'release_date' => $data['release_date'],
             'release_year' => $data['release_year'],
-            'image' => asset($file_path),
+            'image' => env('APP_URL') . '/storage/' . $file_path,
             'story' => $data['story'],
             'market_price' => $data['market_price'],
             'price' => $data['price']
